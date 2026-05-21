@@ -604,7 +604,7 @@ function buildEdit(){
   return html||'<div class="empty-state"><div class="es-icon">🔒</div><div class="es-title">Tidak ada akses edit</div></div>';
 }
 
-// Edit Rundown — Ibadah mengisi nilai per item + bisa edit judul
+// Edit Rundown — semua bisa lihat, hanya Ibadah yang bisa edit
 function buildEditRundown(){
   const pdtOpts=PENGKHOTBAH.map(p=>`<option value="${esc(p.nama)}">${esc(p.nama)}</option>`).join('');
   const litOpts=PELAYAN.map(p=>`<option value="${esc(p.jabatan+' '+p.nama)}">${esc(p.jabatan+' '+p.nama)}</option>`).join('');
@@ -612,34 +612,80 @@ function buildEditRundown(){
   const items=CURR_RD.map(r=>{
     const td=r.tipe_data;
     let input='';
+    const canEditThis = isIbadah();
+    const roVal = (lbl,val) => `<div class="e-group"><label class="e-lbl">${lbl}</label><div style="padding:13px;background:var(--cream);border-radius:10px;border:1.5px solid var(--cream2);font-size:14px;color:${val?'var(--ink)':'var(--ink4)'};font-style:${val?'normal':'italic'}">${val||'Belum diisi'}</div></div>`;
+
     if(td==='khotbah'){
       const parts=(r.nilai||'').split('||');
-      input=`<div class="e-group"><label class="e-lbl">Judul Khotbah</label>
-        <input class="e-inp" id="rd_judul_${r.id}" value="${esc(parts[0]||'')}" placeholder="Judul khotbah..."/></div>
-        <div class="e-group"><label class="e-lbl">Pembicara</label>
-        <select class="e-sel" id="rd_pem_${r.id}"><option value="">— Pilih —</option>${pdtOpts.replace(`value="${esc(parts[1]||'')}"`,`value="${esc(parts[1]||'')}" selected`)}</select></div>`;
-    }else if(td==='bacaan'){
-      input=`<div class="e-group"><label class="e-lbl">Ayat / Bacaan</label>
-        <input class="e-inp" id="rd_val_${r.id}" value="${esc(r.nilai||'')}" placeholder="mis. Kej 45:1-4"/></div>`;
-    }else if(td==='petugas'){
-      if(r.judul.toLowerCase().includes('berdoa')||r.judul.toLowerCase().includes('pembuka')||r.judul.toLowerCase().includes('persembahan')){
-        input=`<div class="e-group"><label class="e-lbl">Liturgis</label>
-          <select class="e-sel" id="rd_val_${r.id}"><option value="">— Pilih —</option>${litOpts.replace(`value="${esc(r.nilai||'')}"`,`value="${esc(r.nilai||'')}" selected`)}</select></div>`;
-      }else if(r.judul.toLowerCase().includes('persembahan')){
-        input=`<div class="e-group"><label class="e-lbl">Petugas Persembahan</label>
-          <input class="e-inp" id="rd_val_${r.id}" value="${esc(r.nilai||'')}" placeholder="mis. Pnt. Gustam, Joshua"/></div>`;
-      }else if(r.judul.toLowerCase().includes('berkatan')||r.judul.toLowerCase().includes('pemberkatan')){
-        input=`<div class="e-group"><label class="e-lbl">Pembicara</label>
-          <select class="e-sel" id="rd_val_${r.id}"><option value="">— Pilih —</option>${pdtOpts.replace(`value="${esc(r.nilai||'')}"`,`value="${esc(r.nilai||'')}" selected`)}</select></div>`;
+      if(canEditThis){
+        input=`<div class="e-group"><label class="e-lbl">Judul Khotbah</label>
+          <input class="e-inp" id="rd_judul_${r.id}" value="${esc(parts[0]||'')}" placeholder="Judul khotbah..."/></div>
+          <div class="e-group"><label class="e-lbl">Pembicara</label>
+          <select class="e-sel" id="rd_pem_${r.id}"><option value="">— Pilih —</option>${pdtOpts.replace(`value="${esc(parts[1]||'')}"`,`value="${esc(parts[1]||'')}" selected`)}</select></div>`;
       }else{
-        input=`<div class="e-group"><label class="e-lbl">Petugas</label>
-          <input class="e-inp" id="rd_val_${r.id}" value="${esc(r.nilai||'')}" placeholder="Nama petugas..."/></div>`;
+        input=roVal('Judul Khotbah',parts[0])+roVal('Pembicara',parts[1]);
+      }
+    }else if(td==='bacaan'){
+      if(canEditThis){
+        input=`<div class="e-group"><label class="e-lbl">Ayat / Bacaan</label>
+          <input class="e-inp" id="rd_val_${r.id}" value="${esc(r.nilai||'')}" placeholder="mis. Kej 45:1-4"/></div>`;
+      }else{
+        input=roVal('Ayat / Bacaan',r.nilai);
+      }
+    }else if(td==='petugas'){
+      if(canEditThis){
+        if(r.judul.toLowerCase().includes('berdoa')||r.judul.toLowerCase().includes('doa pembuka')||r.judul.toLowerCase().includes('doa persembahan')){
+          input=`<div class="e-group"><label class="e-lbl">Liturgis</label>
+            <select class="e-sel" id="rd_val_${r.id}"><option value="">— Pilih —</option>${litOpts.replace(`value="${esc(r.nilai||'')}"`,`value="${esc(r.nilai||'')}" selected`)}</select></div>`;
+        }else if(r.judul.toLowerCase().includes('persembahan')){
+          input=`<div class="e-group"><label class="e-lbl">Petugas Persembahan</label>
+            <input class="e-inp" id="rd_val_${r.id}" value="${esc(r.nilai||'')}" placeholder="mis. Pnt. Gustam, Joshua"/></div>`;
+        }else if(r.judul.toLowerCase().includes('pemberkatan')){
+          input=`<div class="e-group"><label class="e-lbl">Pembicara</label>
+            <select class="e-sel" id="rd_pem_${r.id}"><option value="">— Pilih —</option>${pdtOpts.replace(`value="${esc(r.nilai||'')}"`,`value="${esc(r.nilai||'')}" selected`)}</select></div>`;
+        }else{
+          input=`<div class="e-group"><label class="e-lbl">Petugas</label>
+            <input class="e-inp" id="rd_val_${r.id}" value="${esc(r.nilai||'')}" placeholder="Nama petugas..."/></div>`;
+        }
+      }else{
+        input=roVal('Petugas',r.nilai);
       }
     }else if(td==='lagu'&&!r.judul.toLowerCase().includes('pembuka')&&!r.judul.toLowerCase().includes('koor')){
-      input=`<div class="e-group"><label class="e-lbl">Nomor / Nama Lagu</label>
-        <input class="e-inp" id="rd_val_${r.id}" value="${esc(r.nilai||'')}" placeholder="mis. 56 - S'lama Seminggu Lalu"/></div>`;
+      if(canEditThis){
+        input=`<div class="e-group"><label class="e-lbl">Nomor / Nama Lagu</label>
+          <input class="e-inp" id="rd_val_${r.id}" value="${esc(r.nilai||'')}" placeholder="mis. 56 - S'lama Seminggu Lalu"/></div>`;
+      }else{
+        input=roVal('Nomor / Nama Lagu',r.nilai);
+      }
+    }else if(td==='warta'){
+      if(canEditThis){
+        const wartaHTML=CURR_WARTA.length
+          ?CURR_WARTA.map((w,i)=>`<div class="item-card" style="margin-bottom:8px">
+              <div class="item-card-hd">
+                <div class="item-card-ttl">Warta ${i+1}</div>
+                <div style="display:flex;align-items:center;gap:6px">
+                  <div class="item-card-meta">${esc(w.added_by||'')}${w.added_at?' · '+fmtTime(w.added_at):''}</div>
+                  <button class="btn-remove" onclick="hapusWarta(${w.id})">×</button>
+                </div>
+              </div>
+              <div style="font-size:13px;line-height:1.5">${esc(w.isi)}</div>
+            </div>`).join('')
+          :'<div style="text-align:center;padding:10px;color:var(--ink4);font-size:13px;font-style:italic">Belum ada warta</div>';
+        input=`<div>${wartaHTML}</div>
+          <button class="btn-add-sm" style="margin-top:4px" onclick="showTambahWarta()">+ Tambah Warta</button>`;
+      }else{
+        const wartaRO=CURR_WARTA.length
+          ?CURR_WARTA.map((w,i)=>`<div style="padding:8px 0;border-bottom:1px solid var(--cream2);font-size:13px;line-height:1.5"><span style="font-weight:600;color:var(--ink3)">${i+1}. </span>${esc(w.isi)}<div style="font-size:10px;color:var(--ink4);font-style:italic;margin-top:2px">${esc(w.added_by||'')} · ${fmtTime(w.added_at)}</div></div>`).join('')
+          :'<div style="color:var(--ink4);font-size:13px;font-style:italic;padding:8px 0">Belum ada warta</div>';
+        input=`<div class="e-group"><label class="e-lbl">Warta Jemaat</label><div style="padding:12px;background:var(--cream);border-radius:10px;border:1.5px solid var(--cream2)">${wartaRO}</div></div>`;
+      }
+    }else if(td==='jemaat'){
+      const jbHTML=CURR_JB.length
+        ?CURR_JB.map(j=>`<div style="padding:8px 0;border-bottom:1px solid var(--cream2);font-size:13px"><span style="font-weight:600">${esc(j.prefix)} ${esc(j.nama)}</span> — diajak: ${esc(j.diajak_oleh||'—')}<div style="font-size:10px;color:var(--ink4);font-style:italic;margin-top:2px">${esc(j.added_by||'')} · ${fmtTime(j.added_at)}</div></div>`).join('')
+        :'<div style="color:var(--ink4);font-size:13px;font-style:italic;padding:8px 0">Belum ada jemaat baru</div>';
+      input=`<div class="e-group"><label class="e-lbl">Jemaat Baru</label><div style="padding:12px;background:var(--cream);border-radius:10px;border:1.5px solid var(--cream2)">${jbHTML}</div></div>`;
     }else if(td===''){
-      input=''; // no input needed
+      input='';
     }
 
     if(!input&&td!=='lagu'&&td!=='warta'&&td!=='jemaat')return'';
@@ -650,9 +696,8 @@ function buildEditRundown(){
         ${isAdmin()?`<button class="btn-remove" onclick="editItemJudul(${r.id},'${esc(r.judul)}','${esc(r.petugas||'')}')">✏</button>`:''}
       </div>
       ${input}
-      ${td&&td!==''?`<button onclick="saveRundownItem(${r.id},'${td}')" style="padding:10px 16px;background:var(--navy);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:var(--font);width:100%">💾 Simpan</button>`:''}
     </div>`;
-  }).filter(Boolean).join('');
+  }).join('');
 
   return`<div class="edit-section">
     <div class="edit-section-hd" onclick="toggleSection(this)">
@@ -660,8 +705,12 @@ function buildEditRundown(){
       <span style="color:var(--ink4);font-size:12px">▼</span>
     </div>
     <div class="edit-section-body open">
-      ${items||'<div style="text-align:center;padding:16px;color:var(--ink3);font-size:13px">Tidak ada item yang perlu diisi</div>'}
-      ${isAdmin()||isIbadah()?`<button class="btn-add-sm" onclick="showTambahItem()">+ Tambah Item Rundown</button>`:''}
+      ${items||'<div style="text-align:center;padding:16px;color:var(--ink3);font-size:13px">Tidak ada item rundown</div>'}
+      ${isIbadah()?`
+        <button class="btn-save" onclick="saveSemuaRundown()" style="margin-top:8px">💾 Simpan Semua Data Ibadah</button>
+        <div class="save-hint">Perubahan langsung terlihat semua pengguna</div>
+        <button class="btn-add-sm" onclick="showTambahItem()">+ Tambah Item Rundown</button>
+      `:''}
     </div>
   </div>`;
 }
@@ -675,7 +724,7 @@ function buildEditLagu(){
       <div class="item-card-ttl">Lagu ${l.urutan}</div>
       <div style="display:flex;align-items:center;gap:6px">
         <div class="item-card-meta">${esc(l.added_by||'')} · ${fmtTime(l.added_at)}</div>
-        <button class="btn-remove" onclick="hapusLagu(${l.id})">×</button>
+        ${isPujian()?`<button class="btn-remove" onclick="hapusLagu(${l.id})">×</button>`:''}
       </div>
     </div>
     <div style="font-size:13px;font-weight:600">${esc(l.nama)}</div>
@@ -689,7 +738,7 @@ function buildEditLagu(){
     </div>
     <div class="edit-section-body open">
       ${laguHTML||'<div style="text-align:center;padding:12px;color:var(--ink3);font-size:13px">Belum ada lagu</div>'}
-      <button class="btn-add-sm" onclick="showTambahLagu(${rdPembuka?.id||'null'})">+ Tambah Lagu</button>
+      ${isPujian()?`<button class="btn-add-sm" onclick="showTambahLagu(${rdPembuka?.id||'null'})">+ Tambah Lagu</button>`:''}
     </div>
   </div>`;
 }
@@ -706,10 +755,13 @@ function buildEditKoor(){
     <div class="edit-section-body open">
       ${CURR_RD.filter(r=>r.tipe_data==='lagu'&&r.judul.toLowerCase().includes('koor')).map(r=>`
         <div class="e-group"><label class="e-lbl">${esc(r.judul)}</label>
-          <input class="e-inp" id="koor_${r.id}" value="${esc(r.nilai||'')}" placeholder="Nama lagu koor..."/>
+          ${isKoor()
+            ?`<input class="e-inp" id="koor_${r.id}" value="${esc(r.nilai||'')}" placeholder="Nama lagu koor..."/>`
+            :`<div style="padding:13px;background:var(--cream);border-radius:10px;border:1.5px solid var(--cream2);font-size:14px;color:${r.nilai?'var(--ink)':'var(--ink4)'};font-style:${r.nilai?'normal':'italic'}">${r.nilai||'Belum diisi'}</div>`
+          }
         </div>
-        <button onclick="saveRundownVal(${r.id},'koor_${r.id}')" style="padding:10px 16px;background:var(--navy);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:var(--font);width:100%;margin-bottom:12px">💾 Simpan ${esc(r.judul)}</button>
       `).join('')||'<div style="text-align:center;padding:12px;color:var(--ink3);font-size:13px">Tidak ada item koor di rundown</div>'}
+      ${isKoor()?`<button class="btn-save" onclick="saveSemuaKoor()">💾 Simpan Lagu Koor</button><div class="save-hint">Perubahan langsung terlihat semua pengguna</div>`:''}
     </div>
   </div>`;
 }
@@ -721,7 +773,7 @@ function buildEditUsher(){
       <div class="item-card-ttl">${esc(j.prefix)} ${esc(j.nama)}</div>
       <div style="display:flex;align-items:center;gap:6px">
         <div class="item-card-meta">${esc(j.added_by||'')} · ${fmtTime(j.added_at)}</div>
-        <button class="btn-remove" onclick="hapusJemaat(${j.id})">×</button>
+        ${isUsher()?`<button class="btn-remove" onclick="hapusJemaat(${j.id})">×</button>`:''}
       </div>
     </div>
     <div style="font-size:12px;color:var(--ink3)">Diajak oleh: <strong>${esc(j.diajak_oleh||'—')}</strong></div>
@@ -733,7 +785,7 @@ function buildEditUsher(){
     </div>
     <div class="edit-section-body open">
       ${jHTML||'<div style="text-align:center;padding:12px;color:var(--ink3);font-size:13px">Belum ada jemaat baru</div>'}
-      <button class="btn-add-sm" onclick="showTambahJemaat()">+ Tambah Jemaat Baru</button>
+      ${isUsher()?`<button class="btn-add-sm" onclick="showTambahJemaat()">+ Tambah Jemaat Baru</button>`:''}
     </div>
   </div>`;
 }
@@ -746,6 +798,37 @@ function toggleSection(hd){
 }
 
 // ── SAVE FUNCTIONS ──
+async function saveSemuaRundown(){
+  if(!confirm('Simpan semua data ibadah? Perubahan langsung terlihat semua pengguna.'))return;
+  loading(true,'Menyimpan...');
+  try{
+    const updates=[];
+    for(const r of CURR_RD){
+      const td=r.tipe_data;
+      if(td==='warta'||td==='jemaat')continue; // handled separately
+      let nilai=r.nilai||'';
+      if(td==='khotbah'){
+        const judulEl=document.getElementById(`rd_judul_${r.id}`);
+        const pemEl=document.getElementById(`rd_pem_${r.id}`);
+        if(judulEl||pemEl) nilai=(judulEl?.value.trim()||'')+'||'+(pemEl?.value||'');
+      }else{
+        const el=document.getElementById(`rd_val_${r.id}`)||document.getElementById(`rd_pem_${r.id}`);
+        if(el) nilai=el.value.trim()||'';
+      }
+      if(nilai!==r.nilai){
+        updates.push(fetch(`${SB}/rest/v1/liturgis_rundown?id=eq.${r.id}`,{
+          method:'PATCH',headers:{...H(),'Prefer':'return=minimal'},
+          body:JSON.stringify({nilai,updated_by:USER.nama,updated_at:new Date().toISOString()})
+        }));
+      }
+    }
+    await Promise.all(updates);
+    await loadCurrData();
+    toast('Data ibadah tersimpan ✓','ok');
+    TAB='rundown';buildNav();await renderTab();
+  }catch(e){toast('Gagal: '+e.message,'err');}finally{loading(false);}
+}
+
 async function saveRundownItem(id, tipe){
   let nilai='';
   if(tipe==='khotbah'){
@@ -760,6 +843,24 @@ async function saveRundownItem(id, tipe){
   try{
     await fetch(`${SB}/rest/v1/liturgis_rundown?id=eq.${id}`,{method:'PATCH',headers:{...H(),'Prefer':'return=minimal'},body:JSON.stringify({nilai,updated_by:USER.nama,updated_at:new Date().toISOString()})});
     await loadCurrData();toast('Tersimpan ✓','ok');
+    TAB='rundown';buildNav();await renderTab();
+  }catch(e){toast('Gagal: '+e.message,'err');}finally{loading(false);}
+}
+
+async function saveSemuaKoor(){
+  if(!confirm('Simpan lagu koor? Perubahan langsung terlihat semua pengguna.'))return;
+  loading(true,'Menyimpan...');
+  try{
+    const koorItems=CURR_RD.filter(r=>r.tipe_data==='lagu'&&r.judul.toLowerCase().includes('koor'));
+    await Promise.all(koorItems.map(r=>{
+      const el=document.getElementById(`koor_${r.id}`);
+      if(!el)return Promise.resolve();
+      return fetch(`${SB}/rest/v1/liturgis_rundown?id=eq.${r.id}`,{
+        method:'PATCH',headers:{...H(),'Prefer':'return=minimal'},
+        body:JSON.stringify({nilai:el.value.trim(),updated_by:USER.nama,updated_at:new Date().toISOString()})
+      });
+    }));
+    await loadCurrData();toast('Lagu koor tersimpan ✓','ok');
     TAB='rundown';buildNav();await renderTab();
   }catch(e){toast('Gagal: '+e.message,'err');}finally{loading(false);}
 }
@@ -874,6 +975,19 @@ async function saveJemaat(){
     await fetch(`${SB}/rest/v1/liturgis_jemaat_baru`,{method:'POST',headers:{...H(),'Prefer':'return=minimal'},
       body:JSON.stringify({sesi_id:CURR.id,prefix,nama,diajak_oleh:diajak||'',added_by:USER.nama,added_at:new Date().toISOString()})});
     await loadCurrData();toast('Jemaat baru ditambahkan ✓','ok');await renderTab();
+  }catch(e){toast('Gagal: '+e.message,'err');}finally{loading(false);}
+}
+
+async function hapusWarta(id){
+  if(!confirm('Hapus warta ini?'))return;
+  loading(true,'Menghapus...');
+  try{
+    await fetch(`${SB}/rest/v1/liturgis_warta?id=eq.${id}`,{method:'DELETE',headers:H()});
+    // Reorder remaining
+    await loadCurrData();
+    const reorder=CURR_WARTA.map((w,i)=>fetch(`${SB}/rest/v1/liturgis_warta?id=eq.${w.id}`,{method:'PATCH',headers:{...H(),'Prefer':'return=minimal'},body:JSON.stringify({urutan:i+1})}));
+    await Promise.all(reorder);
+    await loadCurrData();toast('Warta dihapus','ok');await renderTab();
   }catch(e){toast('Gagal: '+e.message,'err');}finally{loading(false);}
 }
 
