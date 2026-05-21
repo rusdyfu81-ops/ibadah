@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>GPBSI — Koordinasi Liturgis</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#1B2B5E;--navy2:#243672;--gold:#C9A84C;--gold2:#E8C96A;
+  --cream:#F5F0E8;--cream2:#EDE6D6;--white:#FFFFFF;
+  --red:#DC2626;--red-l:#FEE2E2;--green:#16A34A;--green-l:#DCFCE7;
+  --amber:#D97706;--amber-l:#FEF3C7;--blue:#2563EB;--blue-l:#DBEAFE;
+  --ink:#1a1a2e;--ink2:#374151;--ink3:#6B7280;--ink4:#9CA3AF;
+  --border:#D4C9B0;--font:'Plus Jakarta Sans',-apple-system,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;font-family:var(--font);background:var(--cream);color:var(--ink)}
+.screen{display:none;min-height:100vh;flex-direction:column}
+.screen.active{display:flex}
+
+/* LOGIN */
+#scrLogin{
+  background:rgba(13,27,62,.95);
+  align-items:center;justify-content:center;
+  padding:40px 24px;gap:28px;
+  position:fixed;inset:0;z-index:500;
+  backdrop-filter:blur(4px);
+}
+.login-cross{width:56px;height:56px;position:relative;display:flex;align-items:center;justify-content:center;margin:0 auto 14px}
+.login-cross::before{content:'';position:absolute;width:9px;height:56px;background:var(--gold);border-radius:5px}
+.login-cross::after{content:'';position:absolute;width:42px;height:9px;background:var(--gold);border-radius:5px;top:10px}
+.login-logo{text-align:center}
+.login-logo h1{font-size:24px;font-weight:800;color:#fff}
+.login-logo p{font-size:12px;color:rgba(255,255,255,.45);margin-top:4px;line-height:1.5}
+.login-card{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:24px;width:100%;max-width:360px}
+.login-card h2{font-size:14px;font-weight:700;color:#fff;margin-bottom:18px}
+.f-lbl{font-size:10px;font-weight:700;color:rgba(255,255,255,.45);text-transform:uppercase;letter-spacing:1px;margin-bottom:5px}
+.f-inp{width:100%;padding:13px;border-radius:9px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.08);color:#fff;font-size:15px;font-family:var(--font);margin-bottom:12px}
+.f-inp:focus{outline:none;border-color:var(--gold)}
+.btn-login{width:100%;padding:15px;background:var(--gold);color:var(--navy);font-size:15px;font-weight:700;border:none;border-radius:9px;cursor:pointer;font-family:var(--font)}
+.login-err{font-size:12px;color:#fca5a5;text-align:center;margin-top:10px;min-height:18px}
+
+/* TOPBAR */
+.topbar{background:var(--navy);padding:0 14px;display:flex;align-items:center;justify-content:space-between;height:56px;flex-shrink:0;position:sticky;top:0;z-index:100}
+.tb-brand{display:flex;align-items:center;gap:8px}
+.tb-cross{font-size:18px;color:var(--gold)}
+.tb-title{font-size:14px;font-weight:800;color:#fff}
+.tb-sub{font-size:10px;color:rgba(255,255,255,.4)}
+.tb-right{display:flex;align-items:center;gap:8px}
+.role-pill{font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px}
+.rp-admin{background:rgba(255,255,255,.15);color:#fff}
+.rp-ibadah{background:rgba(201,168,76,.25);color:var(--gold2)}
+.rp-pujian{background:rgba(220,38,38,.2);color:#fca5a5}
+.rp-koor{background:rgba(39,174,96,.2);color:#6fcf97}
+.rp-usher{background:rgba(86,204,242,.2);color:#56ccf2}
+.rp-user{background:rgba(255,255,255,.08);color:rgba(255,255,255,.4)}
+.tb-logout{background:none;border:none;cursor:pointer;color:rgba(255,255,255,.35);font-size:18px;padding:8px;min-width:44px;min-height:44px;display:flex;align-items:center;justify-content:center}
+.gold-line{height:3px;background:linear-gradient(90deg,var(--navy),var(--gold),var(--navy));flex-shrink:0}
+
+/* SESSION BAR */
+.sess-bar{background:var(--navy2);padding:8px 12px;display:flex;gap:6px;overflow-x:auto;flex-shrink:0;scrollbar-width:none}
+.sess-bar::-webkit-scrollbar{display:none}
+.sess-btn{flex-shrink:0;padding:8px 14px;border-radius:20px;border:1px solid rgba(255,255,255,.2);background:transparent;color:rgba(255,255,255,.5);font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font);white-space:nowrap;min-height:44px;display:flex;align-items:center}
+.sess-btn.on{background:var(--gold);color:var(--navy);border-color:var(--gold);font-size:13px}
+
+/* CONTENT */
+.content{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:8px;padding-bottom:80px}
+
+/* BOTTOM NAV */
+.bnav{background:var(--navy);border-top:1px solid rgba(201,168,76,.2);display:flex;position:fixed;bottom:0;left:0;right:0;z-index:100}
+.bnav-btn{flex:1;padding:10px 4px 8px;display:flex;flex-direction:column;align-items:center;gap:3px;border:none;background:none;cursor:pointer;color:rgba(255,255,255,.35);font-size:11px;font-weight:600;font-family:var(--font);transition:color .15s;min-height:56px;position:relative}
+.bnav-btn svg{width:22px;height:22px}
+.bnav-btn.on{color:var(--gold)}
+.bnav-btn.on::after{content:'';position:absolute;bottom:0;left:15%;width:70%;height:2px;background:var(--gold);border-radius:2px 2px 0 0}
+
+/* CARD */
+.card{background:#fff;border-radius:12px;padding:14px;border:1px solid var(--border)}
+.card-ttl{font-size:13px;font-weight:700;color:var(--navy);margin-bottom:10px}
+
+/* STATUS BAR */
+.status-bar{background:#FEF3C7;border-bottom:2px solid #F59E0B;padding:0;overflow:hidden;flex-shrink:0;max-height:0;transition:max-height .3s ease}
+.status-bar.show{max-height:120px}
+.status-bar-inner{padding:8px 14px;display:flex;flex-direction:column;gap:4px}
+.status-item{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;color:#92400E}
+.status-dot{width:7px;height:7px;border-radius:50%;background:#F59E0B;flex-shrink:0;animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+/* EMPTY STATE */
+.empty-state{text-align:center;padding:48px 24px;color:var(--ink3)}
+.empty-state .es-icon{font-size:40px;margin-bottom:12px}
+.empty-state .es-title{font-size:15px;font-weight:700;color:var(--ink2);margin-bottom:6px}
+.empty-state .es-desc{font-size:13px;line-height:1.5}
+
+/* RUNDOWN */
+.rd-wrap{background:#fff;border-radius:12px;border:1px solid var(--border);overflow:hidden}
+.rd-item{display:flex;align-items:center;gap:12px;padding:14px;border-bottom:1px solid var(--cream2);cursor:pointer;transition:background .1s;min-height:64px}
+.rd-item:last-child{border-bottom:none}
+.rd-item:active{background:var(--cream)}
+.rd-item.expanded{background:#FAFAF8}
+.rd-n{width:28px;height:28px;border-radius:50%;background:var(--cream2);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--ink3);flex-shrink:0;border:1px solid var(--border)}
+.rd-body{flex:1;min-width:0}
+.rd-name{font-size:14px;font-weight:700;color:var(--ink)}
+.rd-sub{font-size:13px;color:var(--navy);font-weight:600;margin-top:3px}
+.rd-sub.empty{color:var(--red);font-weight:500;font-size:12px}
+.rd-sub.muted{color:var(--ink4);font-weight:400;font-size:12px}
+.rd-upd-badge{font-size:10px;color:var(--amber);font-weight:600;margin-top:2px}
+.rd-detail{
+  padding:10px 14px 12px 49px;
+  background:#F7F5F0;
+  border-top:1px solid var(--cream2);
+  display:none;
+  margin:0;
+}
+.rd-detail.show{display:block}
+.rd-detail-header{
+  font-size:10px;font-weight:700;color:var(--ink4);
+  text-transform:uppercase;letter-spacing:.06em;
+  margin-bottom:6px;
+}
+.rd-drow{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;padding:6px 0;border-bottom:1px solid var(--cream2);font-size:13px;line-height:1.4}
+.rd-drow:last-child{border-bottom:none}
+.rd-dl{color:var(--ink3);flex-shrink:0;min-width:90px}
+.rd-dv{font-weight:600;color:var(--ink);text-align:right;line-height:1.4}
+.rd-dv.empty{color:var(--ink4);font-weight:400;font-style:italic}
+.rd-upd{font-size:11px;color:var(--ink4);font-style:italic;margin-top:8px}
+
+/* STATUS INDICATORS */
+.dot-empty{width:8px;height:8px;border-radius:50%;background:var(--red);flex-shrink:0}
+.dot-ok{width:8px;height:8px;border-radius:50%;background:var(--green);flex-shrink:0}
+.chip-new{font-size:11px;padding:3px 8px;border-radius:20px;background:var(--blue-l);color:var(--blue);font-weight:700;flex-shrink:0}
+
+/* PROGRESS BAR */
+.progress-wrap{background:#fff;border-radius:12px;border:1px solid var(--border);padding:12px 14px;margin-bottom:2px}
+.progress-label{display:flex;justify-content:space-between;font-size:12px;margin-bottom:6px}
+.progress-label span:first-child{font-weight:600;color:var(--ink2)}
+.progress-label span:last-child{color:var(--ink3)}
+.progress-bar-bg{height:6px;background:var(--cream2);border-radius:10px;overflow:hidden}
+.progress-bar{height:100%;background:var(--green);border-radius:10px;transition:width .3s}
+.progress-bar.warn{background:var(--amber)}
+.progress-bar.danger{background:var(--red)}
+
+/* ALERT */
+.alert{border-radius:10px;padding:10px 13px;display:flex;gap:8px;align-items:flex-start;font-size:13px;line-height:1.5}
+.a-warn{background:var(--amber-l);color:#92400E}
+.a-info{background:var(--blue-l);color:#1e40af}
+.a-ok{background:var(--green-l);color:#14532d}
+
+/* EDIT FORM */
+.edit-section{background:#fff;border-radius:12px;border:1px solid var(--border);overflow:hidden;margin-bottom:8px}
+.edit-section-hd{padding:14px;border-bottom:1px solid var(--cream2);display:flex;align-items:center;justify-content:space-between;cursor:pointer}
+.edit-section-ttl{font-size:13px;font-weight:700;color:var(--navy);display:flex;align-items:center;gap:7px}
+.edit-section-body{padding:14px;display:none}
+.edit-section-body.open{display:block}
+.e-group{margin-bottom:14px}
+.e-group:last-child{margin-bottom:0}
+.e-lbl{font-size:12px;font-weight:600;color:var(--ink3);margin-bottom:6px;display:block}
+.e-inp,.e-sel,.e-ta{width:100%;padding:13px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;font-family:var(--font);color:var(--ink);background:#fff;transition:border-color .15s;-webkit-appearance:none}
+.e-inp:focus,.e-sel:focus,.e-ta:focus{outline:none;border-color:var(--gold)}
+.e-ta{resize:vertical;min-height:80px;line-height:1.5}
+.e-row{display:flex;gap:8px}
+.e-row>*{flex:1}
+.btn-save{width:100%;padding:15px;background:var(--navy);color:#fff;font-size:15px;font-weight:700;border:none;border-radius:10px;cursor:pointer;font-family:var(--font);display:flex;align-items:center;justify-content:center;gap:8px;min-height:52px}
+.btn-save:active{opacity:.85}
+.btn-add-sm{width:100%;padding:13px;background:transparent;color:var(--navy);border:1.5px dashed var(--border);border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:var(--font);display:flex;align-items:center;justify-content:center;gap:6px;min-height:48px}
+.save-hint{font-size:11px;color:var(--ink4);text-align:center;margin-top:8px}
+
+/* ENTRY CARD */
+.entry-card{background:var(--cream);border-radius:10px;padding:12px;margin-bottom:8px;border:1px solid var(--border)}
+.entry-card-ttl{font-size:11px;font-weight:700;color:var(--navy);margin-bottom:10px;text-transform:uppercase;letter-spacing:.05em}
+.btn-remove{background:none;border:none;color:var(--red);font-size:12px;cursor:pointer;padding:2px 6px;font-family:var(--font)}
+
+/* ADMIN */
+.user-item{display:flex;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid var(--cream2);min-height:56px}
+.user-item:last-child{border-bottom:none}
+.u-av{width:36px;height:36px;border-radius:50%;background:var(--navy);color:var(--gold2);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0}
+.u-name{font-size:14px;font-weight:700}
+.u-email{font-size:12px;color:var(--ink3)}
+.u-role{font-size:10px;font-weight:700;padding:3px 8px;border-radius:20px;flex-shrink:0}
+.ur-admin{background:var(--amber-l);color:var(--amber)}
+.ur-ibadah{background:var(--blue-l);color:var(--blue)}
+.ur-pujian{background:var(--red-l);color:var(--red)}
+.ur-koor{background:var(--green-l);color:var(--green)}
+.ur-usher{background:#E0F2FE;color:#0369a1}
+.ur-user{background:var(--cream2);color:var(--ink3)}
+
+/* RIPPLE */
+.rd-item{overflow:hidden}
+.ripple{position:absolute;border-radius:50%;background:rgba(201,168,76,.25);transform:scale(0);animation:ripple .4s linear;pointer-events:none}
+@keyframes ripple{to{transform:scale(4);opacity:0}}
+/* LOADING & TOAST */
+#loading{position:fixed;inset:0;background:rgba(27,43,94,.88);display:none;align-items:center;justify-content:center;z-index:999;flex-direction:column;gap:12px}
+#loading.show{display:flex}
+.spinner{width:36px;height:36px;border:3px solid rgba(201,168,76,.3);border-top-color:var(--gold);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+#loading p{color:#fff;font-size:13px;font-weight:600}
+#toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:var(--navy);color:#fff;font-size:13px;font-weight:600;padding:10px 20px;border-radius:20px;opacity:0;transition:opacity .25s;pointer-events:none;z-index:200;white-space:nowrap;border:1px solid var(--gold);max-width:90vw;text-align:center}
+#toast.show{opacity:1}
+#toast.ok{background:var(--green);border-color:var(--green)}
+#toast.err{background:var(--red);border-color:var(--red)}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="screen" id="scrLogin" onclick="closeLoginIfOutside(event)">
+  <div class="login-logo">
+    <div class="login-cross"></div>
+    <h1>GPBSI</h1>
+    <p>Gereja Presbiterian Bukit Sion Indonesia<br>Koordinasi Liturgis</p>
+  </div>
+  <div class="login-card">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+      <h2 style="margin-bottom:0">Masuk sebagai Pelayan</h2>
+      <button onclick="document.getElementById('scrLogin').classList.remove('active')" style="background:none;border:none;color:rgba(255,255,255,.5);font-size:22px;cursor:pointer;padding:4px;line-height:1">×</button>
+    </div>
+    <div class="f-lbl">Email</div>
+    <input class="f-inp" type="email" id="loginEmail" placeholder="email@gpbsi.org" autocomplete="email"/>
+    <div class="f-lbl">Password</div>
+    <input class="f-inp" type="password" id="loginPass" placeholder="••••••••" autocomplete="current-password"/>
+    <button class="btn-login" onclick="doLogin()">Masuk</button>
+    <div class="login-err" id="loginErr"></div>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div class="screen active" id="scrApp">
+  <div class="topbar">
+    <div class="tb-brand">
+      <span class="tb-cross">✝</span>
+      <div>
+        <div class="tb-title">GPBSI Liturgis</div>
+        <div class="tb-sub" id="tbSub"></div>
+      </div>
+    </div>
+    <div class="tb-right">
+      <span class="role-pill" id="rolePill"></span>
+      <button class="tb-logout" id="tbLoginBtn" onclick="showLogin()" title="Masuk" style="display:none;color:var(--gold);font-size:13px;font-weight:700;padding:6px 10px;border-radius:20px;border:1px solid var(--gold);background:transparent;min-width:unset">Masuk</button>
+      <button class="tb-logout" id="tbLogoutBtn" onclick="doLogout()" title="Keluar" style="display:none">⏻</button>
+    </div>
+  </div>
+  <div class="gold-line"></div>
+  <div class="status-bar" id="statusBar"><div class="status-bar-inner" id="statusBarInner"></div></div>
+  <div class="sess-bar" id="sessBar"></div>
+  <div class="content" id="mainContent"></div>
+  <nav class="bnav" id="bnav"></nav>
+</div>
+
+<div id="loading"><div class="spinner"></div><p id="loadTxt">Memuat...</p></div>
+<div id="toast"></div>
+
+<script>
+const SB_URL='https://ucbxyuvtcaszsldzajfc.supabase.co';
+const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVjYnh5dXZ0Y2FzenNsZHphamZjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkzMDIxNjUsImV4cCI6MjA5NDg3ODE2NX0.1pcuC2rc95yJrtMlyoGHO4A0r3Zih9UkOHxbVn5IJt0';
+
+let USER=null,SESI=[],CURR=null,TAB='rundown';
+let PENGKHOTBAH=[],PELAYAN=[],expandedIdx=-1;
+let CURR_DATA={rd:{},pj:{},kr:{},jb:[]};
+let laguRows=[{urutan:1,nama:'',kode:''}];
+let jemaatRows=[{prefix:'Bapak',nama:'',diajak_oleh:''}];
+
+const H=()=>({'Content-Type':'application/json','apikey':SB_KEY,'Authorization':'Bearer '+(USER?.token||SB_KEY)});
+const esc=s=>(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const fmtTime=iso=>{if(!iso)return'';const d=new Date(iso),now=new Date(),diff=Math.floor((now-d)/60000);if(diff<1)return'baru saja';if(diff<60)return diff+' mnt lalu';if(diff<1440)return Math.floor(diff/60)+' jam lalu';return d.toLocaleDateString('id-ID',{day:'numeric',month:'short'});};
+const initials=n=>(n||'?').split(' ').slice(0,2).map(w=>w[0]).join('').toUpperCase();
+
+let toastT;
+function toast(msg,type=''){const el=document.getElementById('toast');el.textContent=msg;el.className='show '+type;clearTimeout(toastT);toastT=setTimeout(()=>el.className='',3000);}
+function loading(on,txt='Memuat...'){document.getElementById('loading').classList.toggle('show',on);document.getElementById('loadTxt').textContent=txt;}
+
+// ── AUTH ──
+function showLogin(){
+  document.getElementById('scrLogin').classList.add('active');
+  document.getElementById('loginEmail').focus();
+}
+function closeLoginIfOutside(e){
+  if(e.target===document.getElementById('scrLogin')){
+    document.getElementById('scrLogin').classList.remove('active');
+  }
+}
+
+async function doLogin(){
+  const email=document.getElementById('loginEmail').value.trim();
+  const pass=document.getElementById('loginPass').value;
+  const err=document.getElementById('loginErr');
+  err.textContent='';
+  if(!email||!pass){err.textContent='Email dan password harus diisi';return;}
+  loading(true,'Masuk...');
+  try{
+    const res=await fetch(`${SB_URL}/auth/v1/token?grant_type=password`,{method:'POST',headers:{'Content-Type':'application/json','apikey':SB_KEY},body:JSON.stringify({email,password:pass})});
+    const auth=await res.json();
+    if(!res.ok)throw new Error(auth.error_description||auth.message||'Login gagal');
+    const profiles=await fetch(`${SB_URL}/rest/v1/liturgis_users?email=eq.${encodeURIComponent(email)}&select=*`,{headers:{'apikey':SB_KEY,'Authorization':'Bearer '+auth.access_token}}).then(r=>r.json());
+    if(!profiles.length)throw new Error('Akun tidak ditemukan di daftar pengguna');
+    const p=profiles[0];
+    USER={id:auth.user.id,email,nama:p.nama,role:p.role,token:auth.access_token};
+    localStorage.setItem('gpbsi_lit',JSON.stringify({...USER,exp:Date.now()+3600000*8}));
+    document.getElementById('scrLogin').classList.remove('active');
+    await startApp();
+  }catch(e){err.textContent=e.message;}finally{loading(false);}
+}
+
+async function restoreSession(){
+  const s=localStorage.getItem('gpbsi_lit');
+  if(!s)return false;
+  const d=JSON.parse(s);
+  if(Date.now()>d.exp){localStorage.removeItem('gpbsi_lit');return false;}
+  USER=d;return true;
+}
+
+function doLogout(){
+  localStorage.removeItem('gpbsi_lit');
+  USER=null;
+  const pill=document.getElementById('rolePill');
+  pill.textContent='Tamu';pill.className='role-pill rp-user';
+  document.getElementById('tbSub').textContent='Mode Lihat';
+  document.getElementById('tbLoginBtn').style.display='flex';
+  document.getElementById('tbLogoutBtn').style.display='none';
+  buildNav();renderTab();
+  document.getElementById('scrLogin').classList.remove('active');
+}
+
+// ── GUEST MODE ──
+async function startGuest(){
+  document.getElementById('scrLogin').classList.remove('active');
+  document.getElementById('scrApp').classList.add('active');
+  const pill = document.getElementById('rolePill');
+  pill.textContent = 'Tamu';
+  pill.className = 'role-pill rp-user';
+  document.getElementById('tbSub').textContent = 'Mode Lihat';
+  // Show login button in topbar
+  document.getElementById('tbLoginBtn').style.display = 'flex';
+  document.getElementById('tbLogoutBtn').style.display = 'none';
+  await Promise.all([loadPengkhotbah(), loadPelayan(), loadSesi()]);
+  buildNav();
+  if(CURR) await loadCurrData();
+  await renderTab();
+}
+
+// ── START ──
+async function startApp(){
+  document.getElementById('scrLogin').classList.remove('active');
+  document.getElementById('scrApp').classList.add('active');
+  const rmap={admin:'rp-admin',ibadah:'rp-ibadah',pujian:'rp-pujian',koor:'rp-koor',usher:'rp-usher',user:'rp-user'};
+  const pill=document.getElementById('rolePill');
+  pill.textContent=USER.role.charAt(0).toUpperCase()+USER.role.slice(1);
+  pill.className='role-pill '+(rmap[USER.role]||'rp-user');
+  document.getElementById('tbSub').textContent=USER.nama;
+  document.getElementById('tbLoginBtn').style.display = 'none';
+  document.getElementById('tbLogoutBtn').style.display = 'flex';
+  await Promise.all([loadPengkhotbah(),loadPelayan(),loadSesi()]);
+  buildNav();
+  if(CURR)await loadCurrData();
+  await renderTab();
+}
+
+async function loadPengkhotbah(){
+  try{const r=await fetch(`${SB_URL}/rest/v1/liturgis_pengkhotbah?aktif=eq.true&order=urutan.asc`,{headers:H()}).then(r=>r.json());PENGKHOTBAH=Array.isArray(r)?r:[];}catch{PENGKHOTBAH=[];}
+}
+async function loadPelayan(){
+  try{const r=await fetch(`${SB_URL}/rest/v1/liturgis_pelayan?aktif=eq.true&order=urutan.asc`,{headers:H()}).then(r=>r.json());PELAYAN=Array.isArray(r)?r:[];}catch{PELAYAN=[];}
+}
+
+// ── SESI ──
+async function loadSesi(){
+  loading(true,'Memuat...');
+  try{
+    const today=new Date().toISOString().slice(0,10);
+    const list=await fetch(`${SB_URL}/rest/v1/liturgis_sesi?select=*&tanggal=gte.${today}&order=tanggal.asc&limit=20`,{headers:H()}).then(r=>r.json());
+    SESI=Array.isArray(list)?list:[];
+    CURR=SESI.length?SESI[0]:null;
+    buildSessBar();
+  }catch(e){toast('Gagal muat sesi','err');}finally{loading(false);}
+}
+
+function buildSessBar(){
+  const bar=document.getElementById('sessBar');
+  if(!SESI.length){bar.innerHTML='';return;}
+  bar.innerHTML=SESI.map((s,i)=>`<button class="sess-btn ${i===0?'on':''}" onclick="selSess(${s.id},this)">${esc(s.label)}</button>`).join('');
+  if(USER.role==='admin')bar.innerHTML+=`<button class="sess-btn" onclick="goAdmin()" style="border-style:dashed;color:var(--gold2)">+ Sesi</button>`;
+}
+
+async function selSess(id,el){
+  document.querySelectorAll('.sess-btn').forEach(b=>b.classList.remove('on'));
+  el.classList.add('on');
+  CURR=SESI.find(s=>s.id===id)||SESI[0];
+  expandedIdx=-1;
+  await loadCurrData();
+  await renderTab();
+}
+
+// ── LOAD CURRENT SESSION DATA ──
+async function loadCurrData(){
+  if(!CURR){CURR_DATA={rd:{},pj:{},kr:{},jb:[]};return;}
+  const sid=CURR.id;
+  try{
+    const[rd,pj,kr,jb]=await Promise.all([
+      fetch(`${SB_URL}/rest/v1/liturgis_rundown?sesi_id=eq.${sid}`,{headers:H()}).then(r=>r.json()).catch(()=>[]),
+      fetch(`${SB_URL}/rest/v1/liturgis_pujian?sesi_id=eq.${sid}`,{headers:H()}).then(r=>r.json()).catch(()=>[]),
+      fetch(`${SB_URL}/rest/v1/liturgis_koor?sesi_id=eq.${sid}`,{headers:H()}).then(r=>r.json()).catch(()=>[]),
+      fetch(`${SB_URL}/rest/v1/liturgis_jemaat_baru?sesi_id=eq.${sid}&order=added_at.asc`,{headers:H()}).then(r=>r.json()).catch(()=>[]),
+    ]);
+    CURR_DATA={rd:rd[0]||{},pj:pj[0]||{},kr:kr[0]||{},jb:Array.isArray(jb)?jb:[]};
+    // Sync edit rows from existing data
+    syncEditRows();
+    updateStatusBar();
+  }catch{CURR_DATA={rd:{},pj:{},kr:{},jb:[]};}
+}
+
+function syncEditRows(){
+  // Sync lagu rows from pujian data
+  const lagu=CURR_DATA.pj.lagu_pembuka;
+  if(Array.isArray(lagu)&&lagu.length){
+    laguRows=lagu.map(l=>({urutan:l.urutan,nama:l.nama||'',kode:l.kode||''}));
+  } else {
+    laguRows=[{urutan:1,nama:'',kode:''}];
+  }
+  // Sync jemaat rows
+  if(CURR_DATA.jb.length){
+    jemaatRows=CURR_DATA.jb.map(j=>({prefix:j.prefix||'Bapak',nama:j.nama||'',diajak_oleh:j.diajak_oleh||''}));
+  } else {
+    jemaatRows=[{prefix:'Bapak',nama:'',diajak_oleh:''}];
+  }
+}
+
+// ── NAV ──
+const canEdit=()=>['admin','ibadah','pujian','koor','usher'].includes(USER?.role);
+const isAdmin=()=>USER?.role==='admin';
+
+function buildNav(){
+  const tabs=['rundown'];
+  if(canEdit())tabs.push('edit');
+  if(isAdmin())tabs.push('admin');
+  const icons={
+    rundown:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><polyline points="3 6 4 7 6 5"/><polyline points="3 12 4 13 6 11"/><polyline points="3 18 4 19 6 17"/></svg>`,
+    edit:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>`,
+    admin:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/></svg>`,
+  };
+  const labels={rundown:'Rundown',edit:'Edit',admin:'Admin'};
+  document.getElementById('bnav').innerHTML=tabs.map(t=>`<button class="bnav-btn ${t===TAB?'on':''}" onclick="switchTab('${t}',this)">${icons[t]}${labels[t]}</button>`).join('');
+}
+
+async function switchTab(tab,el){
+  TAB=tab;expandedIdx=-1;
+  document.querySelectorAll('.bnav-btn').forEach(b=>b.classList.remove('on'));
+  el?.classList.add('on');
+  await renderTab();
+}
+
+async function renderTab(){
+  if(!CURR&&TAB!=='admin'){
+    document.getElementById('mainContent').innerHTML=`<div class="empty-state"><div class="es-icon">📅</div><div class="es-title">Belum ada sesi ibadah</div><div class="es-desc">Admin dapat membuat sesi baru${isAdmin()?'':' melalui akun Admin'}</div>${isAdmin()?'<button class="btn-save" style="margin-top:16px;max-width:200px;margin-inline:auto" onclick="goAdmin()">+ Buat Sesi Baru</button>':''}</div>`;
+    return;
+  }
+  loading(true);
+  try{
+    const c=document.getElementById('mainContent');
+    if(TAB==='rundown')c.innerHTML=buildRundown();
+    else if(TAB==='edit')c.innerHTML=buildEdit();
+    else if(TAB==='admin')c.innerHTML=await buildAdmin();
+  }catch(e){toast('Gagal: '+e.message,'err');}
+  finally{loading(false);}
+}
+
+// ── STATUS BAR ──
+function updateStatusBar(){
+  const{rd,jb}=CURR_DATA;
+  const bar=document.getElementById('statusBar');
+  const inner=document.getElementById('statusBarInner');
+  if(!bar||!inner)return;
+  const ONE_HOUR=60*60*1000;
+  const now=Date.now();
+  const items=[];
+
+  // Check warta
+  if(rd.updated_at_ibadah){
+    const diff=now-new Date(rd.updated_at_ibadah).getTime();
+    if(diff<ONE_HOUR&&rd.updated_by_ibadah){
+      items.push(`<div class="status-item"><div class="status-dot"></div>Warta diubah · ${esc(rd.updated_by_ibadah)} · ${fmtTime(rd.updated_at_ibadah)}</div>`);
+    }
+  }
+
+  // Check jemaat baru
+  if(jb.length){
+    const latest=jb[jb.length-1];
+    if(latest.added_at){
+      const diff=now-new Date(latest.added_at).getTime();
+      if(diff<ONE_HOUR&&latest.added_by){
+        items.push(`<div class="status-item"><div class="status-dot"></div>Jemaat baru ditambah · ${esc(latest.added_by)} · ${fmtTime(latest.added_at)}</div>`);
+      }
+    }
+  }
+
+  if(items.length){
+    inner.innerHTML=items.join('');
+    bar.classList.add('show');
+  }else{
+    bar.classList.remove('show');
+    inner.innerHTML='';
+  }
+}
+
+// ── TEMPLATE ──
+const TMPL_MINGGU1=[
+  {key:'pujian_pembuka',name:'Pujian Pembuka',src:'pujian'},
+  {key:'doa_teduh',name:'Doa Teduh',sub:'Semua jemaat'},
+  {key:'pengakuan_iman',name:'Pengakuan Iman Rasuli',sub:'Semua — berdiri'},
+  {key:'pujian_sebelum',name:'Pujian Sebelum Khotbah',src:'ibadah'},
+  {key:'bertanggapan',name:'Bertanggapan',src:'ibadah'},
+  {key:'berdoa',name:'Berdoa',src:'ibadah',field:'liturgis'},
+  {key:'roti_hidup',name:'Roti Hidup',src:'ibadah'},
+  {key:'khotbah',name:'Khotbah',src:'ibadah'},
+  {key:'lagu_koor_utama',name:'Lagu Koor Bukit Sion',src:'koor'},
+  {key:'pujian_setelah',name:'Pujian Setelah Khotbah',src:'ibadah'},
+  {key:'doa_persembahan',name:'Doa Persembahan',src:'ibadah',field:'liturgis'},
+  {key:'persembahan',name:'Persembahan',src:'ibadah',field:'petugas_persembahan'},
+  {key:'lagu_koor_persembahan',name:'Lagu Koor Persembahan',src:'koor'},
+  {key:'penyambutan',name:'Penyambutan Jemaat',sub:'Semua jemaat'},
+  {key:'warta',name:'Warta Jemaat',src:'ibadah'},
+  {key:'jemaat_baru',name:'Jemaat Baru',src:'usher'},
+  {key:'pujian_penutup',name:'Pujian Penutup',src:'ibadah'},
+  {key:'pemberkatan',name:'Pemberkatan',src:'ibadah',field:'pembicara'},
+];
+const TMPL_MINGGU2=[
+  {key:'pujian_pembuka',name:'Pujian Pembuka',src:'pujian'},
+  {key:'doa_seruan',name:'Doa Seruan',sub:'Semua jemaat'},
+  {key:'doa_pembuka',name:'Doa Pembuka',src:'ibadah',field:'liturgis'},
+  {key:'roti_hidup',name:'Ayat Pembacaan',src:'ibadah'},
+  {key:'khotbah',name:'Khotbah',src:'ibadah'},
+  {key:'pujian_setelah',name:'Pujian Setelah Khotbah',src:'ibadah'},
+  {key:'doa_seruan2',name:'Doa Seruan',sub:'Semua jemaat'},
+  {key:'doa_persembahan',name:'Doa Persembahan',src:'ibadah',field:'liturgis'},
+  {key:'persembahan',name:'Persembahan',src:'ibadah',field:'petugas_persembahan'},
+  {key:'warta',name:'Warta Jemaat',src:'ibadah'},
+  {key:'jemaat_baru',name:'Jemaat Baru',src:'usher'},
+  {key:'pujian_penutup',name:'Pujian Penutup',src:'ibadah'},
+  {key:'pemberkatan',name:'Pemberkatan',src:'ibadah',field:'pembicara'},
+];
+const TMPL_RABU=[
+  {key:'pujian_pembuka',name:'Pujian Pembuka',src:'pujian'},
+  {key:'doa_seruan',name:'Doa Seruan',sub:'Semua jemaat'},
+  {key:'roti_hidup',name:'Ayat Pembacaan',src:'ibadah'},
+  {key:'khotbah',name:'Khotbah',src:'ibadah'},
+  {key:'pujian_setelah',name:'Pujian Setelah Khotbah',src:'ibadah'},
+  {key:'doa_persembahan',name:'Doa Persembahan',src:'ibadah',field:'liturgis'},
+  {key:'persembahan',name:'Persembahan',src:'ibadah',field:'petugas_persembahan'},
+  {key:'warta',name:'Warta Jemaat',src:'ibadah'},
+  {key:'jemaat_baru',name:'Jemaat Baru',src:'usher'},
+  {key:'pujian_penutup',name:'Pujian Penutup',src:'ibadah'},
+  {key:'pemberkatan',name:'Pemberkatan',src:'ibadah',field:'pembicara'},
+];
+
+function getTemplate(){
+  if(CURR.tipe==='minggu2')return TMPL_MINGGU2;
+  if(CURR.tipe==='rabu')return TMPL_RABU;
+  return TMPL_MINGGU1;
+}
+
+// Get summary text for each item
+function getItemSummary(item){
+  const{rd,pj,kr,jb}=CURR_DATA;
+  const k=item.key;
+  if(k==='pujian_pembuka'){
+    const lagu=pj.lagu_pembuka;
+    if(Array.isArray(lagu)&&lagu.length)return lagu.map(l=>l.nama+(l.kode?' ('+l.kode+')':'')).join(' · ');
+    return null;
+  }
+  if(k==='khotbah'){
+    if(rd.judul_khotbah)return rd.judul_khotbah+(rd.pembicara?' — '+rd.pembicara:'');
+    return null;
+  }
+  if(k==='roti_hidup')return rd.roti_hidup||null;
+  if(k==='pujian_sebelum')return rd.pujian_sebelum||null;
+  if(k==='bertanggapan')return rd.bertanggapan||null;
+  if(k==='pujian_setelah')return rd.pujian_setelah||null;
+  if(k==='pujian_penutup')return rd.pujian_penutup||null;
+  if(k==='berdoa'||k==='doa_pembuka'||k==='doa_persembahan')return rd.liturgis||null;
+  if(k==='pemberkatan')return rd.pembicara||null;
+  if(k==='persembahan')return rd.petugas_persembahan||null;
+  if(k==='lagu_koor_utama')return kr.lagu_koor_utama||null;
+  if(k==='lagu_koor_persembahan')return kr.lagu_koor_persembahan||null;
+  if(k==='warta'){const w=rd.warta;return Array.isArray(w)&&w.length?w.length+' warta':null;}
+  if(k==='jemaat_baru')return jb.length?jb.length+' orang':null;
+  return item.sub||null;
+}
+
+function isItemRequired(item){return!!item.src;}
+
+function getItemDetail(item){
+  const{rd,pj,kr,jb}=CURR_DATA;
+  const k=item.key;
+  let rows=[];
+  const drow=(lbl,val)=>`<div class="rd-drow"><span class="rd-dl">${lbl}</span><span class="rd-dv ${val?'':'empty'}">${val?esc(val):'Belum diisi'}</span></div>`;
+
+  if(k==='pujian_pembuka'){
+    const lagu=pj.lagu_pembuka;
+    if(Array.isArray(lagu)&&lagu.length)lagu.forEach(l=>rows.push(drow('Lagu '+l.urutan,l.nama+(l.kode?' ('+l.kode+')':""))));
+    else rows.push(drow('Lagu',''));
+    if(pj.updated_by)rows.push(`<div class="rd-upd">✏ ${esc(pj.updated_by)} · ${fmtTime(pj.updated_at)}</div>`);
+  }else if(k==='khotbah'){
+    rows.push(drow('Judul',rd.judul_khotbah));
+    rows.push(drow('Pembicara',rd.pembicara));
+    if(rd.updated_by_ibadah)rows.push(`<div class="rd-upd">✏ ${esc(rd.updated_by_ibadah)} · ${fmtTime(rd.updated_at_ibadah)}</div>`);
+  }else if(k==='roti_hidup'){
+    rows.push(drow('Ayat',rd.roti_hidup));
+    if(rd.updated_by_ibadah)rows.push(`<div class="rd-upd">✏ ${esc(rd.updated_by_ibadah)} · ${fmtTime(rd.updated_at_ibadah)}</div>`);
+  }else if(['pujian_sebelum','bertanggapan','pujian_setelah','pujian_penutup'].includes(k)){
+    rows.push(drow('Nomor',rd[k]));
+    if(rd.updated_by_ibadah)rows.push(`<div class="rd-upd">✏ ${esc(rd.updated_by_ibadah)} · ${fmtTime(rd.updated_at_ibadah)}</div>`);
+  }else if(['berdoa','doa_pembuka','doa_persembahan'].includes(k)){
+    rows.push(drow('Liturgis',rd.liturgis));
+  }else if(k==='pemberkatan'){
+    rows.push(drow('Pembicara',rd.pembicara));
+  }else if(k==='persembahan'){
+    rows.push(drow('Petugas',rd.petugas_persembahan));
+    if(rd.updated_by_ibadah)rows.push(`<div class="rd-upd">✏ ${esc(rd.updated_by_ibadah)} · ${fmtTime(rd.updated_at_ibadah)}</div>`);
+  }else if(k==='lagu_koor_utama'){
+    rows.push(drow('Lagu',kr.lagu_koor_utama));
+    if(kr.updated_by)rows.push(`<div class="rd-upd">✏ ${esc(kr.updated_by)} · ${fmtTime(kr.updated_at)}</div>`);
+  }else if(k==='lagu_koor_persembahan'){
+    rows.push(drow('Lagu',kr.lagu_koor_persembahan));
+    if(kr.updated_by)rows.push(`<div class="rd-upd">✏ ${esc(kr.updated_by)} · ${fmtTime(kr.updated_at)}</div>`);
+  }else if(k==='warta'){
+    const w=rd.warta;
+    if(Array.isArray(w)&&w.length)w.forEach((t,i)=>rows.push(`<div class="rd-drow"><span class="rd-dl">${i+1}.</span><span class="rd-dv" style="text-align:left;line-height:1.5">${esc(t)}</span></div>`));
+    else rows.push(drow('Warta',''));
+    if(rd.updated_by_ibadah)rows.push(`<div class="rd-upd">✏ ${esc(rd.updated_by_ibadah)} · ${fmtTime(rd.updated_at_ibadah)}</div>`);
+  }else if(k==='jemaat_baru'){
+    if(jb.length)jb.forEach(j=>rows.push(`<div class="rd-drow"><span class="rd-dl">${esc(j.prefix||'')} ${esc(j.nama)}</span><span class="rd-dv">Diajak: ${esc(j.diajak_oleh||'—')}</span></div>`));
+    else rows.push(drow('Jemaat baru',''));
+  }else{
+    rows.push(`<div class="rd-drow"><span class="rd-dl">Keterangan</span><span class="rd-dv muted">${esc(item.sub||'—')}</span></div>`);
+  }
+  return `<div class='rd-detail-header'>Detail</div>`+rows.join('');
+}
+
+// ── RUNDOWN BUILD ──
+function buildRundown(){
+  const tmpl=getTemplate();
+  const{rd,pj,kr,jb}=CURR_DATA;
+
+  // Calculate completion
+  const required=tmpl.filter(i=>i.src);
+  const filled=required.filter(i=>getItemSummary(i));
+  const pct=required.length?Math.round(filled.length/required.length*100):100;
+  const barClass=pct===100?'':pct>=60?'warn':'danger';
+
+  const progressHTML=`<div class="progress-wrap">
+    <div class="progress-label"><span>${CURR.label}</span><span>${filled.length}/${required.length} terisi</span></div>
+    <div class="progress-bar-bg"><div class="progress-bar ${barClass}" style="width:${pct}%"></div></div>
+    ${pct<100?'<div style="font-size:11px;color:var(--amber);margin-top:6px;font-weight:600">⚠ Ada data yang belum diisi</div>':'<div style="font-size:11px;color:var(--green);margin-top:6px;font-weight:600">✓ Semua data sudah terisi</div>'}
+  </div>`;
+
+  const items=tmpl.map((item,i)=>{
+    const summary=getItemSummary(item);
+    const required=isItemRequired(item);
+    const isEmpty=required&&!summary;
+    const isExp=expandedIdx===i;
+
+    const dotHTML=required?(isEmpty?'<div class="dot-empty"></div>':'<div class="dot-ok"></div>'):'';
+    const subHTML=summary
+      ?`<div class="rd-sub">${esc(summary)}</div>`
+      :required
+        ?`<div class="rd-sub empty">⚠ Belum diisi</div>`
+        :`<div class="rd-sub muted">${esc(item.sub||'')}</div>`;
+
+    // Recent change indicator
+    let recentChange='';
+    if(item.src==='ibadah'&&rd.updated_at_ibadah){const diff=Math.floor((Date.now()-new Date(rd.updated_at_ibadah))/60000);if(diff<120)recentChange=`<div class="rd-upd-badge">Diubah ${fmtTime(rd.updated_at_ibadah)}</div>`;}
+    if(item.src==='pujian'&&pj.updated_at){const diff=Math.floor((Date.now()-new Date(pj.updated_at))/60000);if(diff<120)recentChange=`<div class="rd-upd-badge">Diubah ${fmtTime(pj.updated_at)}</div>`;}
+    if(item.src==='koor'&&kr.updated_at){const diff=Math.floor((Date.now()-new Date(kr.updated_at))/60000);if(diff<120)recentChange=`<div class="rd-upd-badge">Diubah ${fmtTime(kr.updated_at)}</div>`;}
+
+    const chipNew=item.key==='jemaat_baru'&&jb.length?`<span class="chip-new">${jb.length}</span>`:'';
+
+    return`<div class="rd-item ${isExp?'expanded':''} ${isEmpty?'rd-empty':''}" onclick="toggleExpand(${i}, event)" style="${isEmpty?'border-left:3px solid var(--red)':''}">
+      <div class="rd-n">${i+1}</div>
+      <div class="rd-body">
+        <div class="rd-name">${esc(item.name)}</div>
+        ${subHTML}
+        ${recentChange}
+      </div>
+      ${dotHTML}${chipNew}
+    </div>
+    <div class="rd-detail ${isExp?'show':''}">${getItemDetail(item)}</div>`;
+  }).join('');
+
+  setTimeout(updateStatusBar, 0);
+  return progressHTML+`<div class="rd-wrap">${items}</div>`;
+}
+
+function toggleExpand(i, event){
+  // Ripple effect
+  const item = event.currentTarget;
+  const ripple = document.createElement('div');
+  ripple.className = 'ripple';
+  const rect = item.getBoundingClientRect();
+  const size = Math.max(rect.width, rect.height);
+  ripple.style.cssText = `width:${size}px;height:${size}px;left:${(event.clientX||rect.left+rect.width/2)-rect.left-size/2}px;top:${(event.clientY||rect.top+rect.height/2)-rect.top-size/2}px`;
+  item.appendChild(ripple);
+  setTimeout(()=>ripple.remove(), 400);
+  // Toggle
+  expandedIdx=expandedIdx===i?-1:i;
+  renderTab();
+  // Scroll to item after render
+  if(expandedIdx===i){
+    setTimeout(()=>{
+      const els=document.querySelectorAll('.rd-item');
+      if(els[i])els[i].scrollIntoView({behavior:'smooth',block:'nearest'});
+    },50);
+  }
+}
+
+// ── EDIT BUILD ──
+function buildEdit(){
+  const role=USER.role;
+  let html='';
+  if(role==='pujian'||role==='admin')html+=buildEditPujian();
+  if(role==='ibadah'||role==='admin')html+=buildEditIbadah();
+  if(role==='koor'||role==='admin')html+=buildEditKoor();
+  if(role==='usher'||role==='admin')html+=buildEditUsher();
+  return html||'<div class="empty-state"><div class="es-icon">🔒</div><div class="es-title">Tidak ada akses edit</div></div>';
+}
+
+function buildEditPujian(){
+  const laguHTML=laguRows.map((l,i)=>`<div class="entry-card">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+      <div class="entry-card-ttl">Lagu ${i+1}</div>
+      ${laguRows.length>1?`<button class="btn-remove" onclick="removeLagu(${i})">✕ Hapus</button>`:''}
+    </div>
+    <div class="e-group"><label class="e-lbl">Nama Lagu</label>
+      <input class="e-inp" value="${esc(l.nama)}" placeholder="Nama lagu..." oninput="laguRows[${i}].nama=this.value"/></div>
+    <div class="e-group" style="margin-bottom:0"><label class="e-lbl">Kode (KPPK / Kr / No.)</label>
+      <input class="e-inp" value="${esc(l.kode)}" placeholder="mis. Kppk 363" oninput="laguRows[${i}].kode=this.value"/></div>
+  </div>`).join('');
+  return`<div class="edit-section">
+    <div class="edit-section-hd" onclick="toggleSection(this)">
+      <div class="edit-section-ttl">🎵 Pujian Pembuka</div>
+      <span style="color:var(--ink4);font-size:12px">▼</span>
+    </div>
+    <div class="edit-section-body open">
+      ${laguHTML}
+      <button class="btn-add-sm" onclick="addLagu()">+ Tambah Lagu</button>
+      <button class="btn-save" onclick="savePujian()" style="margin-top:10px">💾 Simpan Pujian Pembuka</button>
+      <div class="save-hint">Langsung terlihat oleh semua pengguna</div>
+    </div>
+  </div>`;
+}
+
+function buildEditIbadah(){
+  const rd=CURR_DATA.rd;
+  const pdtOpts=PENGKHOTBAH.map(p=>`<option value="${esc(p.nama)}" ${rd.pembicara===p.nama?'selected':''}>${esc(p.nama)}</option>`).join('');
+  const litOpts=PELAYAN.map(p=>`<option value="${esc(p.jabatan+' '+p.nama)}" ${rd.liturgis===(p.jabatan+' '+p.nama)?'selected':''}>${esc(p.jabatan+' '+p.nama)}</option>`).join('');
+  const warta=Array.isArray(rd.warta)?rd.warta.join('\n'):'';
+  return`<div class="edit-section">
+    <div class="edit-section-hd" onclick="toggleSection(this)">
+      <div class="edit-section-ttl">📋 Data Ibadah</div>
+      <span style="color:var(--ink4);font-size:12px">▼</span>
+    </div>
+    <div class="edit-section-body open">
+      <div class="e-group"><label class="e-lbl">Liturgis</label>
+        <select class="e-sel" id="eLiturgis"><option value="">— Pilih —</option>${litOpts}</select></div>
+      <div class="e-group"><label class="e-lbl">Roti Hidup / Ayat Pembacaan</label>
+        <input class="e-inp" id="eRotiHidup" value="${esc(rd.roti_hidup||'')}" placeholder="mis. Kej 45:1-4"/></div>
+      <div class="e-group"><label class="e-lbl">Judul Khotbah</label>
+        <input class="e-inp" id="eJudul" value="${esc(rd.judul_khotbah||'')}" placeholder="Judul khotbah..."/></div>
+      <div class="e-group"><label class="e-lbl">Pembicara</label>
+        <select class="e-sel" id="ePembicara"><option value="">— Pilih —</option>${pdtOpts}</select></div>
+      <div class="e-group"><label class="e-lbl">Pujian Sebelum Khotbah</label>
+        <input class="e-inp" id="ePujianSebelum" value="${esc(rd.pujian_sebelum||'')}" placeholder="mis. 56 - S'lama Seminggu Lalu"/></div>
+      <div class="e-group"><label class="e-lbl">Bertanggapan</label>
+        <input class="e-inp" id="eBertanggapan" value="${esc(rd.bertanggapan||'')}" placeholder="mis. No. 16 Mazmur 63"/></div>
+      <div class="e-group"><label class="e-lbl">Pujian Setelah Khotbah</label>
+        <input class="e-inp" id="ePujianSetelah" value="${esc(rd.pujian_setelah||'')}" placeholder="mis. 214(Kr) - Marilah Nyanyikan"/></div>
+      <div class="e-group"><label class="e-lbl">Pujian Penutup</label>
+        <select class="e-sel" id="ePujianPenutup">
+          <option value="">— Pilih —</option>
+          <option value="No. 6 — Bapa, Anak dan Roh Kudus" ${rd.pujian_penutup==='No. 6 — Bapa, Anak dan Roh Kudus'?'selected':''}>No. 6 — Bapa, Anak dan Roh Kudus</option>
+          <option value="No. 53 — Doxologi" ${rd.pujian_penutup==='No. 53 — Doxologi'?'selected':''}>No. 53 — Doxologi</option>
+        </select></div>
+      <div class="e-group"><label class="e-lbl">Petugas Persembahan</label>
+        <input class="e-inp" id="ePetugas" value="${esc(rd.petugas_persembahan||'')}" placeholder="mis. Pnt. Gustam, Joshua, Bujang"/></div>
+      <div class="e-group"><label class="e-lbl">Warta Jemaat (satu per baris)</label>
+        <textarea class="e-ta" id="eWarta" placeholder="Warta 1&#10;Warta 2&#10;Warta 3">${esc(warta)}</textarea></div>
+      <button class="btn-save" onclick="saveIbadah()">💾 Simpan Data Ibadah</button>
+      <div class="save-hint">Langsung terlihat oleh semua pengguna</div>
+    </div>
+  </div>`;
+}
+
+function buildEditKoor(){
+  const kr=CURR_DATA.kr;
+  return`<div class="edit-section">
+    <div class="edit-section-hd" onclick="toggleSection(this)">
+      <div class="edit-section-ttl">🎼 Lagu Koor</div>
+      <span style="color:var(--ink4);font-size:12px">▼</span>
+    </div>
+    <div class="edit-section-body open">
+      <div class="e-group"><label class="e-lbl">Lagu Koor Bukit Sion</label>
+        <input class="e-inp" id="eKoorUtama" value="${esc(kr.lagu_koor_utama||'')}" placeholder="mis. For the Beauty of the Earth"/></div>
+      <div class="e-group"><label class="e-lbl">Lagu Koor Persembahan</label>
+        <input class="e-inp" id="eKoorPersembahan" value="${esc(kr.lagu_koor_persembahan||'')}" placeholder="mis. 175. Yesus Cinta Padaku"/></div>
+      <button class="btn-save" onclick="saveKoor()">💾 Simpan Lagu Koor</button>
+      <div class="save-hint">Langsung terlihat oleh semua pengguna</div>
+    </div>
+  </div>`;
+}
+
+function buildEditUsher(){
+  const prefixOpts=['Bapak','Ibu','Saudara','Saudari'];
+  const jHTML=jemaatRows.map((j,i)=>`<div class="entry-card">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+      <div class="entry-card-ttl">Jemaat Baru ${i+1}</div>
+      ${jemaatRows.length>1?`<button class="btn-remove" onclick="removeJemaat(${i})">✕ Hapus</button>`:''}
+    </div>
+    <div class="e-row" style="margin-bottom:10px">
+      <select class="e-sel" style="max-width:120px" onchange="jemaatRows[${i}].prefix=this.value">
+        ${prefixOpts.map(p=>`<option ${j.prefix===p?'selected':''}>${p}</option>`).join('')}
+      </select>
+      <input class="e-inp" value="${esc(j.nama)}" placeholder="Nama lengkap" oninput="jemaatRows[${i}].nama=this.value"/>
+    </div>
+    <input class="e-inp" value="${esc(j.diajak_oleh)}" placeholder="Diajak oleh..." oninput="jemaatRows[${i}].diajak_oleh=this.value"/>
+  </div>`).join('');
+  return`<div class="edit-section">
+    <div class="edit-section-hd" onclick="toggleSection(this)">
+      <div class="edit-section-ttl">👤 Jemaat Baru</div>
+      <span style="color:var(--ink4);font-size:12px">▼</span>
+    </div>
+    <div class="edit-section-body open">
+      ${jHTML}
+      <button class="btn-add-sm" onclick="addJemaat()">+ Tambah Jemaat Baru</button>
+      <button class="btn-save" onclick="saveJemaat()" style="margin-top:10px">💾 Simpan Jemaat Baru</button>
+      <div class="save-hint">Langsung terlihat oleh semua pengguna</div>
+    </div>
+  </div>`;
+}
+
+function toggleSection(hd){
+  const body=hd.nextElementSibling;
+  const arrow=hd.querySelector('span');
+  body.classList.toggle('open');
+  arrow.textContent=body.classList.contains('open')?'▼':'▶';
+}
+
+// ── LAGU & JEMAAT HELPERS ──
+function addLagu(){laguRows.push({urutan:laguRows.length+1,nama:'',kode:''});renderTab();}
+function removeLagu(i){laguRows.splice(i,1);laguRows.forEach((l,idx)=>l.urutan=idx+1);renderTab();}
+function addJemaat(){jemaatRows.push({prefix:'Bapak',nama:'',diajak_oleh:''});renderTab();}
+function removeJemaat(i){jemaatRows.splice(i,1);renderTab();}
+
+// ── SAVE FUNCTIONS ──
+async function savePujian(){
+  if(!confirm('Simpan pujian pembuka? Data akan langsung terlihat semua pengguna.'))return;
+  const valid=laguRows.filter(l=>l.nama.trim());
+  if(!valid.length){toast('Isi nama lagu dulu','err');return;}
+  loading(true,'Menyimpan...');
+  try{
+    const body={sesi_id:CURR.id,lagu_pembuka:valid.map((l,i)=>({urutan:i+1,nama:l.nama.trim(),kode:l.kode.trim()})),updated_by:USER.nama,updated_at:new Date().toISOString()};
+    if(CURR_DATA.pj.id){
+      await fetch(`${SB_URL}/rest/v1/liturgis_pujian?sesi_id=eq.${CURR.id}`,{method:'PATCH',headers:{...H(),'Prefer':'return=minimal'},body:JSON.stringify(body)});
+    }else{
+      await fetch(`${SB_URL}/rest/v1/liturgis_pujian`,{method:'POST',headers:{...H(),'Prefer':'return=minimal'},body:JSON.stringify(body)});
+    }
+    await loadCurrData();
+    toast('Pujian pembuka tersimpan ✓','ok');
+    TAB='rundown';buildNav();await renderTab();
+  }catch(e){toast('Gagal: '+e.message,'err');}finally{loading(false);}
+}
+
+async function saveIbadah(){
+  if(!confirm('Simpan data ibadah? Data akan langsung terlihat semua pengguna.'))return;
+  loading(true,'Menyimpan...');
+  try{
+    const warta=document.getElementById('eWarta').value.split('\n').map(s=>s.trim()).filter(Boolean);
+    const body={
+      sesi_id:CURR.id,
+      liturgis:document.getElementById('eLiturgis').value,
+      roti_hidup:document.getElementById('eRotiHidup').value.trim(),
+      judul_khotbah:document.getElementById('eJudul').value.trim(),
+      pembicara:document.getElementById('ePembicara').value,
+      pujian_sebelum:document.getElementById('ePujianSebelum').value.trim(),
+      bertanggapan:document.getElementById('eBertanggapan').value.trim(),
+      pujian_setelah:document.getElementById('ePujianSetelah').value.trim(),
+      pujian_penutup:document.getElementById('ePujianPenutup').value,
+      petugas_persembahan:document.getElementById('ePetugas').value.trim(),
+      warta,
+      updated_by_ibadah:USER.nama,
+      updated_at_ibadah:new Date().toISOString(),
+    };
+    if(CURR_DATA.rd.id){
+      await fetch(`${SB_URL}/rest/v1/liturgis_rundown?sesi_id=eq.${CURR.id}`,{method:'PATCH',headers:{...H(),'Prefer':'return=minimal'},body:JSON.stringify(body)});
+    }else{
+      await fetch(`${SB_URL}/rest/v1/liturgis_rundown`,{method:'POST',headers:{...H(),'Prefer':'return=minimal'},body:JSON.stringify(body)});
+    }
+    await loadCurrData();
+    toast('Data ibadah tersimpan ✓','ok');
+    TAB='rundown';buildNav();await renderTab();
+  }catch(e){toast('Gagal: '+e.message,'err');}finally{loading(false);}
+}
+
+async function saveKoor(){
+  if(!confirm('Simpan lagu koor? Data akan langsung terlihat semua pengguna.'))return;
+  loading(true,'Menyimpan...');
+  try{
+    const body={sesi_id:CURR.id,lagu_koor_utama:document.getElementById('eKoorUtama').value.trim(),lagu_koor_persembahan:document.getElementById('eKoorPersembahan').value.trim(),updated_by:USER.nama,updated_at:new Date().toISOString()};
+    if(CURR_DATA.kr.id){
+      await fetch(`${SB_URL}/rest/v1/liturgis_koor?sesi_id=eq.${CURR.id}`,{method:'PATCH',headers:{...H(),'Prefer':'return=minimal'},body:JSON.stringify(body)});
+    }else{
+      await fetch(`${SB_URL}/rest/v1/liturgis_koor`,{method:'POST',headers:{...H(),'Prefer':'return=minimal'},body:JSON.stringify(body)});
+    }
+    await loadCurrData();
+    toast('Lagu koor tersimpan ✓','ok');
+    TAB='rundown';buildNav();await renderTab();
+  }catch(e){toast('Gagal: '+e.message,'err');}finally{loading(false);}
+}
+
+async function saveJemaat(){
+  if(!confirm('Simpan data jemaat baru? Data akan langsung terlihat semua pengguna.'))return;
+  const valid=jemaatRows.filter(j=>j.nama.trim());
+  if(!valid.length){toast('Isi nama jemaat dulu','err');return;}
+  loading(true,'Menyimpan...');
+  try{
+    await fetch(`${SB_URL}/rest/v1/liturgis_jemaat_baru?sesi_id=eq.${CURR.id}`,{method:'DELETE',headers:H()});
+    const rows=valid.map(j=>({sesi_id:CURR.id,prefix:j.prefix,nama:j.nama.trim(),diajak_oleh:j.diajak_oleh.trim(),added_by:USER.nama,added_at:new Date().toISOString()}));
+    await fetch(`${SB_URL}/rest/v1/liturgis_jemaat_baru`,{method:'POST',headers:{...H(),'Prefer':'return=minimal'},body:JSON.stringify(rows)});
+    await loadCurrData();
+    toast('Jemaat baru tersimpan ✓','ok');
+    TAB='rundown';buildNav();await renderTab();
+  }catch(e){toast('Gagal: '+e.message,'err');}finally{loading(false);}
+}
+
+// ── ADMIN ──
+async function buildAdmin(){
+  let users=[];
+  try{users=await fetch(`${SB_URL}/rest/v1/liturgis_users?select=*&order=nama.asc`,{headers:H()}).then(r=>r.json());}catch{}
+  const rmap={admin:'ur-admin',ibadah:'ur-ibadah',pujian:'ur-pujian',koor:'ur-koor',usher:'ur-usher',user:'ur-user'};
+  const userHTML=users.map(u=>`<div class="user-item">
+    <div class="u-av">${initials(u.nama)}</div>
+    <div style="flex:1"><div class="u-name">${esc(u.nama)}</div><div class="u-email">${esc(u.email)}</div></div>
+    <span class="u-role ${rmap[u.role]||'ur-user'}">${esc(u.role)}</span>
+  </div>`).join('');
+
+  const pdtList=PENGKHOTBAH.map(p=>`<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--cream2);font-size:13px;min-height:44px"><span style="font-weight:500">${esc(p.nama)}</span><span style="color:${p.aktif?'var(--green)':'var(--ink4)'};font-size:12px">${p.aktif?'Aktif':'Nonaktif'}</span></div>`).join('');
+  const lavList=PELAYAN.map(p=>`<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--cream2);font-size:13px;min-height:44px"><span style="font-weight:500">${esc(p.jabatan)} ${esc(p.nama)}</span><span style="color:${p.aktif?'var(--green)':'var(--ink4)'};font-size:12px">${p.aktif?'Aktif':'Nonaktif'}</span></div>`).join('');
+
+  return`
+  <div class="card" style="margin-bottom:8px">
+    <div class="card-ttl">📅 Buat Sesi Baru</div>
+    <div class="e-group"><label class="e-lbl">Tanggal</label><input class="e-inp" type="date" id="aDate" value="${new Date().toISOString().slice(0,10)}"/></div>
+    <div class="e-group"><label class="e-lbl">Format</label>
+      <select class="e-sel" id="aTipe">
+        <option value="minggu1">Minggu kb-1 (10:40)</option>
+        <option value="minggu2">Minggu kb-2 (14:00)</option>
+        <option value="rabu">Rabu Malam (19:30)</option>
+      </select>
+    </div>
+    <button class="btn-save" onclick="createSesi()">+ Buat Sesi</button>
+  </div>
+  <div class="card" style="margin-bottom:8px">
+    <div class="card-ttl">👥 Pengguna (${users.length})</div>
+    ${userHTML||'<div style="color:var(--ink4);font-size:13px;padding:12px 0;text-align:center">Belum ada pengguna</div>'}
+    <div style="margin-top:10px;padding:10px;background:var(--cream);border-radius:8px;font-size:12px;color:var(--ink3);line-height:1.5">Tambah pengguna: Supabase Dashboard → Authentication → Users → Add user, lalu insert ke tabel liturgis_users dengan role yang sesuai.</div>
+  </div>
+  <div class="card" style="margin-bottom:8px">
+    <div class="card-ttl">🎤 Pengkhotbah</div>
+    ${pdtList}
+    <div class="e-group" style="margin-top:12px"><label class="e-lbl">Tambah Pengkhotbah Baru</label><input class="e-inp" id="eNewPdt" placeholder="Nama pengkhotbah"/></div>
+    <button class="btn-save" onclick="addPengkhotbah()">+ Tambah</button>
+  </div>
+  <div class="card">
+    <div class="card-ttl">🙏 Pelayan Liturgis</div>
+    ${lavList}
+    <div class="e-group" style="margin-top:12px"><label class="e-lbl">Tambah Pelayan Baru</label>
+      <div class="e-row">
+        <select class="e-sel" id="eNewLavJab" style="max-width:100px"><option>Pnt.</option><option>Dk.</option><option>Pntw.</option></select>
+        <input class="e-inp" id="eNewLavNama" placeholder="Nama pelayan"/>
+      </div>
+    </div>
+    <button class="btn-save" onclick="addPelayan()">+ Tambah</button>
+  </div>`;
+}
+
+function goAdmin(){TAB='admin';document.querySelectorAll('.bnav-btn').forEach(b=>{b.classList.toggle('on',b.textContent.includes('Admin'));});renderTab();}
+
+async function createSesi(){
+  const date=document.getElementById('aDate').value;
+  const tipe=document.getElementById('aTipe').value;
+  if(!date){toast('Pilih tanggal','err');return;}
+  const dt=new Date(date+'T00:00:00');
+  const d=dt.getDate(),m=dt.toLocaleString('id-ID',{month:'short'});
+  const labels={minggu1:`Minggu kb-1 · ${d} ${m}`,minggu2:`Minggu kb-2 · ${d} ${m}`,rabu:`Rabu · ${d} ${m}`};
+  loading(true,'Membuat sesi...');
+  try{
+    await fetch(`${SB_URL}/rest/v1/liturgis_sesi`,{method:'POST',headers:{...H(),'Prefer':'return=minimal'},body:JSON.stringify({label:labels[tipe],tipe,tanggal:date,created_by:USER.nama,created_at:new Date().toISOString()})});
+    toast('Sesi baru dibuat ✓','ok');
+    await loadSesi();await loadCurrData();TAB='rundown';buildNav();buildSessBar();await renderTab();
+  }catch(e){toast('Gagal: '+e.message,'err');}finally{loading(false);}
+}
+
+async function addPengkhotbah(){
+  const nama=document.getElementById('eNewPdt').value.trim();
+  if(!nama){toast('Isi nama dulu','err');return;}
+  try{
+    await fetch(`${SB_URL}/rest/v1/liturgis_pengkhotbah`,{method:'POST',headers:{...H(),'Prefer':'return=minimal'},body:JSON.stringify({nama,aktif:true,urutan:99})});
+    await loadPengkhotbah();toast('Pengkhotbah ditambahkan ✓','ok');refreshDropdowns();await renderTab();
+  }catch(e){toast('Gagal: '+e.message,'err');}
+}
+
+async function addPelayan(){
+  const jab=document.getElementById('eNewLavJab').value;
+  const nama=document.getElementById('eNewLavNama').value.trim();
+  if(!nama){toast('Isi nama dulu','err');return;}
+  try{
+    await fetch(`${SB_URL}/rest/v1/liturgis_pelayan`,{method:'POST',headers:{...H(),'Prefer':'return=minimal'},body:JSON.stringify({nama,jabatan:jab,aktif:true,urutan:99})});
+    await loadPelayan();toast('Pelayan ditambahkan ✓','ok');refreshDropdowns();await renderTab();
+  }catch(e){toast('Gagal: '+e.message,'err');}
+}
+
+// ── REFRESH DROPDOWNS IN PLACE ──
+function refreshDropdowns(){
+  // Refresh pengkhotbah dropdown
+  const pSel = document.getElementById('ePembicara');
+  if(pSel){
+    const cur = pSel.value;
+    pSel.innerHTML = '<option value="">— Pilih —</option>' + 
+      PENGKHOTBAH.map(p=>`<option value="${p.nama}" ${cur===p.nama?'selected':''}>${p.nama}</option>`).join('');
+  }
+  // Refresh liturgis dropdown
+  const lSel = document.getElementById('eLiturgis');
+  if(lSel){
+    const cur = lSel.value;
+    lSel.innerHTML = '<option value="">— Pilih —</option>' + 
+      PELAYAN.map(p=>{const v=p.jabatan+' '+p.nama;return`<option value="${v}" ${cur===v?'selected':''}>${v}</option>`;}).join('');
+  }
+}
+
+// ── INIT ──
+(async function(){
+  if(await restoreSession()){
+    await startApp();
+  } else {
+    // No login needed to view — start as guest
+    await startGuest();
+  }
+})();
+</script>
+</body>
+</html>
