@@ -8,7 +8,7 @@
 <style>
 :root{
   --navy:#1B2B5E;--navy2:#243672;--gold:#C9A84C;--gold2:#E8C96A;
-  --cream:#F5F0E8;--cream2:#EDE6D6;--white:#FFFFFF;
+  --cream:#F5F0E8;--cream2:#EDE6D6;
   --red:#DC2626;--red-l:#FEE2E2;--green:#16A34A;--green-l:#DCFCE7;
   --amber:#D97706;--amber-l:#FEF3C7;--blue:#2563EB;--blue-l:#DBEAFE;
   --ink:#1a1a2e;--ink2:#374151;--ink3:#6B7280;--ink4:#9CA3AF;
@@ -20,13 +20,7 @@ html,body{height:100%;font-family:var(--font);background:var(--cream);color:var(
 .screen.active{display:flex}
 
 /* LOGIN */
-#scrLogin{
-  background:rgba(13,27,62,.95);
-  align-items:center;justify-content:center;
-  padding:40px 24px;gap:28px;
-  position:fixed;inset:0;z-index:500;
-  backdrop-filter:blur(4px);
-}
+#scrLogin{background:rgba(13,27,62,.95);align-items:center;justify-content:center;padding:40px 24px;gap:28px;position:fixed;inset:0;z-index:500;backdrop-filter:blur(4px)}
 .login-cross{width:56px;height:56px;position:relative;display:flex;align-items:center;justify-content:center;margin:0 auto 14px}
 .login-cross::before{content:'';position:absolute;width:9px;height:56px;background:var(--gold);border-radius:5px}
 .login-cross::after{content:'';position:absolute;width:42px;height:9px;background:var(--gold);border-radius:5px;top:10px}
@@ -34,7 +28,6 @@ html,body{height:100%;font-family:var(--font);background:var(--cream);color:var(
 .login-logo h1{font-size:24px;font-weight:800;color:#fff}
 .login-logo p{font-size:12px;color:rgba(255,255,255,.45);margin-top:4px;line-height:1.5}
 .login-card{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:24px;width:100%;max-width:360px}
-.login-card h2{font-size:14px;font-weight:700;color:#fff;margin-bottom:18px}
 .f-lbl{font-size:10px;font-weight:700;color:rgba(255,255,255,.45);text-transform:uppercase;letter-spacing:1px;margin-bottom:5px}
 .f-inp{width:100%;padding:13px;border-radius:9px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.08);color:#fff;font-size:15px;font-family:var(--font);margin-bottom:12px}
 .f-inp:focus{outline:none;border-color:var(--gold)}
@@ -55,8 +48,18 @@ html,body{height:100%;font-family:var(--font);background:var(--cream);color:var(
 .rp-koor{background:rgba(39,174,96,.2);color:#6fcf97}
 .rp-usher{background:rgba(86,204,242,.2);color:#56ccf2}
 .rp-user{background:rgba(255,255,255,.08);color:rgba(255,255,255,.4)}
-.tb-logout{background:none;border:none;cursor:pointer;color:rgba(255,255,255,.35);font-size:18px;padding:8px;min-width:44px;min-height:44px;display:flex;align-items:center;justify-content:center}
+.tb-btn{background:none;border:none;cursor:pointer;padding:8px;min-width:44px;min-height:44px;display:flex;align-items:center;justify-content:center;border-radius:8px;font-family:var(--font)}
+.tb-login-btn{color:var(--gold);font-size:13px;font-weight:700;border:1px solid var(--gold);border-radius:20px;padding:6px 12px;min-width:unset}
+.tb-logout-btn{color:rgba(255,255,255,.4);font-size:18px}
 .gold-line{height:3px;background:linear-gradient(90deg,var(--navy),var(--gold),var(--navy));flex-shrink:0}
+
+/* STATUS BAR */
+.status-bar{background:var(--amber-l);border-bottom:2px solid var(--amber);padding:0;overflow:hidden;flex-shrink:0;max-height:0;transition:max-height .3s}
+.status-bar.show{max-height:120px}
+.status-bar-inner{padding:8px 14px;display:flex;flex-direction:column;gap:4px}
+.status-item{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;color:#92400E}
+.s-dot{width:7px;height:7px;border-radius:50%;background:var(--amber);flex-shrink:0;animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 
 /* SESSION BAR */
 .sess-bar{background:var(--navy2);padding:8px 12px;display:flex;gap:6px;overflow-x:auto;flex-shrink:0;scrollbar-width:none}
@@ -69,31 +72,28 @@ html,body{height:100%;font-family:var(--font);background:var(--cream);color:var(
 
 /* BOTTOM NAV */
 .bnav{background:var(--navy);border-top:1px solid rgba(201,168,76,.2);display:flex;position:fixed;bottom:0;left:0;right:0;z-index:100}
-.bnav-btn{flex:1;padding:10px 4px 8px;display:flex;flex-direction:column;align-items:center;gap:3px;border:none;background:none;cursor:pointer;color:rgba(255,255,255,.35);font-size:11px;font-weight:600;font-family:var(--font);transition:color .15s;min-height:56px;position:relative}
+.bnav-btn{flex:1;padding:10px 4px 8px;display:flex;flex-direction:column;align-items:center;gap:3px;border:none;background:none;cursor:pointer;color:rgba(255,255,255,.35);font-size:11px;font-weight:600;font-family:var(--font);min-height:56px;position:relative}
 .bnav-btn svg{width:22px;height:22px}
 .bnav-btn.on{color:var(--gold)}
 .bnav-btn.on::after{content:'';position:absolute;bottom:0;left:15%;width:70%;height:2px;background:var(--gold);border-radius:2px 2px 0 0}
 
-/* CARD */
+/* CARDS */
 .card{background:#fff;border-radius:12px;padding:14px;border:1px solid var(--border)}
 .card-ttl{font-size:13px;font-weight:700;color:var(--navy);margin-bottom:10px}
 
-/* STATUS BAR */
-.status-bar{background:#FEF3C7;border-bottom:2px solid #F59E0B;padding:0;overflow:hidden;flex-shrink:0;max-height:0;transition:max-height .3s ease}
-.status-bar.show{max-height:120px}
-.status-bar-inner{padding:8px 14px;display:flex;flex-direction:column;gap:4px}
-.status-item{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;color:#92400E}
-.status-dot{width:7px;height:7px;border-radius:50%;background:#F59E0B;flex-shrink:0;animation:pulse 1.5s infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-/* EMPTY STATE */
-.empty-state{text-align:center;padding:48px 24px;color:var(--ink3)}
-.empty-state .es-icon{font-size:40px;margin-bottom:12px}
-.empty-state .es-title{font-size:15px;font-weight:700;color:var(--ink2);margin-bottom:6px}
-.empty-state .es-desc{font-size:13px;line-height:1.5}
+/* PROGRESS */
+.progress-wrap{background:#fff;border-radius:12px;border:1px solid var(--border);padding:12px 14px}
+.progress-label{display:flex;justify-content:space-between;font-size:12px;margin-bottom:6px}
+.progress-label span:first-child{font-weight:600}
+.progress-label span:last-child{color:var(--ink3)}
+.progress-bar-bg{height:6px;background:var(--cream2);border-radius:10px;overflow:hidden}
+.progress-bar{height:100%;background:var(--green);border-radius:10px;transition:width .3s}
+.progress-bar.warn{background:var(--amber)}
+.progress-bar.danger{background:var(--red)}
 
 /* RUNDOWN */
 .rd-wrap{background:#fff;border-radius:12px;border:1px solid var(--border);overflow:hidden}
-.rd-item{display:flex;align-items:center;gap:12px;padding:14px;border-bottom:1px solid var(--cream2);cursor:pointer;transition:background .1s;min-height:64px}
+.rd-item{display:flex;align-items:center;gap:12px;padding:14px;border-bottom:1px solid var(--cream2);cursor:pointer;transition:background .1s;min-height:64px;position:relative;overflow:hidden}
 .rd-item:last-child{border-bottom:none}
 .rd-item:active{background:var(--cream)}
 .rd-item.expanded{background:#FAFAF8}
@@ -104,70 +104,55 @@ html,body{height:100%;font-family:var(--font);background:var(--cream);color:var(
 .rd-sub.empty{color:var(--red);font-weight:500;font-size:12px}
 .rd-sub.muted{color:var(--ink4);font-weight:400;font-size:12px}
 .rd-upd-badge{font-size:10px;color:var(--amber);font-weight:600;margin-top:2px}
-.rd-detail{
-  padding:10px 14px 12px 49px;
-  background:#F7F5F0;
-  border-top:1px solid var(--cream2);
-  display:none;
-  margin:0;
-}
-.rd-detail.show{display:block}
-.rd-detail-header{
-  font-size:10px;font-weight:700;color:var(--ink4);
-  text-transform:uppercase;letter-spacing:.06em;
-  margin-bottom:6px;
-}
-.rd-drow{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;padding:6px 0;border-bottom:1px solid var(--cream2);font-size:13px;line-height:1.4}
-.rd-drow:last-child{border-bottom:none}
-.rd-dl{color:var(--ink3);flex-shrink:0;min-width:90px}
-.rd-dv{font-weight:600;color:var(--ink);text-align:right;line-height:1.4}
-.rd-dv.empty{color:var(--ink4);font-weight:400;font-style:italic}
-.rd-upd{font-size:11px;color:var(--ink4);font-style:italic;margin-top:8px}
-
-/* STATUS INDICATORS */
 .dot-empty{width:8px;height:8px;border-radius:50%;background:var(--red);flex-shrink:0}
 .dot-ok{width:8px;height:8px;border-radius:50%;background:var(--green);flex-shrink:0}
 .chip-new{font-size:11px;padding:3px 8px;border-radius:20px;background:var(--blue-l);color:var(--blue);font-weight:700;flex-shrink:0}
+.ripple{position:absolute;border-radius:50%;background:rgba(201,168,76,.25);transform:scale(0);animation:ripple .4s linear;pointer-events:none}
+@keyframes ripple{to{transform:scale(4);opacity:0}}
 
-/* PROGRESS BAR */
-.progress-wrap{background:#fff;border-radius:12px;border:1px solid var(--border);padding:12px 14px;margin-bottom:2px}
-.progress-label{display:flex;justify-content:space-between;font-size:12px;margin-bottom:6px}
-.progress-label span:first-child{font-weight:600;color:var(--ink2)}
-.progress-label span:last-child{color:var(--ink3)}
-.progress-bar-bg{height:6px;background:var(--cream2);border-radius:10px;overflow:hidden}
-.progress-bar{height:100%;background:var(--green);border-radius:10px;transition:width .3s}
-.progress-bar.warn{background:var(--amber)}
-.progress-bar.danger{background:var(--red)}
-
-/* ALERT */
-.alert{border-radius:10px;padding:10px 13px;display:flex;gap:8px;align-items:flex-start;font-size:13px;line-height:1.5}
-.a-warn{background:var(--amber-l);color:#92400E}
-.a-info{background:var(--blue-l);color:#1e40af}
-.a-ok{background:var(--green-l);color:#14532d}
+/* DETAIL PANEL */
+.rd-detail{padding:10px 14px 12px 54px;background:#F7F5F0;border-top:1px solid var(--cream2);display:none}
+.rd-detail.show{display:block}
+.rd-detail-hdr{font-size:10px;font-weight:700;color:var(--ink4);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+.rd-drow{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;padding:5px 0;border-bottom:1px solid var(--cream2);font-size:13px;line-height:1.4}
+.rd-drow:last-child{border-bottom:none}
+.rd-dl{color:var(--ink3);flex-shrink:0;min-width:80px}
+.rd-dv{font-weight:600;color:var(--ink);text-align:right}
+.rd-dv.empty{color:var(--ink4);font-weight:400;font-style:italic}
+.rd-upd{font-size:10px;color:var(--ink4);font-style:italic;margin-top:6px}
 
 /* EDIT FORM */
 .edit-section{background:#fff;border-radius:12px;border:1px solid var(--border);overflow:hidden;margin-bottom:8px}
-.edit-section-hd{padding:14px;border-bottom:1px solid var(--cream2);display:flex;align-items:center;justify-content:space-between;cursor:pointer}
+.edit-section-hd{padding:14px;border-bottom:1px solid var(--cream2);display:flex;align-items:center;justify-content:space-between;cursor:pointer;min-height:52px}
 .edit-section-ttl{font-size:13px;font-weight:700;color:var(--navy);display:flex;align-items:center;gap:7px}
 .edit-section-body{padding:14px;display:none}
 .edit-section-body.open{display:block}
 .e-group{margin-bottom:14px}
-.e-group:last-child{margin-bottom:0}
 .e-lbl{font-size:12px;font-weight:600;color:var(--ink3);margin-bottom:6px;display:block}
 .e-inp,.e-sel,.e-ta{width:100%;padding:13px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;font-family:var(--font);color:var(--ink);background:#fff;transition:border-color .15s;-webkit-appearance:none}
 .e-inp:focus,.e-sel:focus,.e-ta:focus{outline:none;border-color:var(--gold)}
-.e-ta{resize:vertical;min-height:80px;line-height:1.5}
+.e-ta{resize:vertical;min-height:72px;line-height:1.5}
 .e-row{display:flex;gap:8px}
 .e-row>*{flex:1}
 .btn-save{width:100%;padding:15px;background:var(--navy);color:#fff;font-size:15px;font-weight:700;border:none;border-radius:10px;cursor:pointer;font-family:var(--font);display:flex;align-items:center;justify-content:center;gap:8px;min-height:52px}
 .btn-save:active{opacity:.85}
-.btn-add-sm{width:100%;padding:13px;background:transparent;color:var(--navy);border:1.5px dashed var(--border);border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:var(--font);display:flex;align-items:center;justify-content:center;gap:6px;min-height:48px}
+.btn-add-sm{width:100%;padding:13px;background:transparent;color:var(--navy);border:1.5px dashed var(--border);border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:var(--font);display:flex;align-items:center;justify-content:center;gap:6px;min-height:48px;margin-top:6px}
+.btn-danger{background:var(--red);border-color:var(--red)}
 .save-hint{font-size:11px;color:var(--ink4);text-align:center;margin-top:8px}
 
-/* ENTRY CARD */
-.entry-card{background:var(--cream);border-radius:10px;padding:12px;margin-bottom:8px;border:1px solid var(--border)}
-.entry-card-ttl{font-size:11px;font-weight:700;color:var(--navy);margin-bottom:10px;text-transform:uppercase;letter-spacing:.05em}
-.btn-remove{background:none;border:none;color:var(--red);font-size:12px;cursor:pointer;padding:2px 6px;font-family:var(--font)}
+/* ITEM CARDS */
+.item-card{background:var(--cream);border-radius:10px;padding:12px;margin-bottom:8px;border:1px solid var(--border)}
+.item-card-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.item-card-ttl{font-size:11px;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:.05em}
+.item-card-meta{font-size:10px;color:var(--ink4);font-style:italic}
+.btn-remove{background:none;border:none;color:var(--red);font-size:20px;cursor:pointer;padding:2px;line-height:1;min-width:32px;min-height:32px;display:flex;align-items:center;justify-content:center}
+
+/* RUNDOWN EDIT */
+.rd-edit-item{display:flex;align-items:center;gap:8px;padding:10px 12px;background:var(--cream);border-radius:8px;margin-bottom:6px;border:1px solid var(--border);min-height:52px}
+.rd-edit-drag{color:var(--ink4);font-size:18px;cursor:grab;padding:4px;flex-shrink:0}
+.rd-edit-body{flex:1;min-width:0}
+.rd-edit-judul{font-size:13px;font-weight:600}
+.rd-edit-petugas{font-size:11px;color:var(--ink3)}
 
 /* ADMIN */
 .user-item{display:flex;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid var(--cream2);min-height:56px}
@@ -183,10 +168,19 @@ html,body{height:100%;font-family:var(--font);background:var(--cream);color:var(
 .ur-usher{background:#E0F2FE;color:#0369a1}
 .ur-user{background:var(--cream2);color:var(--ink3)}
 
-/* RIPPLE */
-.rd-item{overflow:hidden}
-.ripple{position:absolute;border-radius:50%;background:rgba(201,168,76,.25);transform:scale(0);animation:ripple .4s linear;pointer-events:none}
-@keyframes ripple{to{transform:scale(4);opacity:0}}
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(13,27,62,.9);z-index:600;display:flex;align-items:flex-end;justify-content:center;backdrop-filter:blur(3px)}
+.modal-sheet{background:#fff;border-radius:16px 16px 0 0;padding:20px;width:100%;max-width:480px;max-height:85vh;overflow-y:auto}
+.modal-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.modal-ttl{font-size:15px;font-weight:700;color:var(--navy)}
+.modal-close{background:none;border:none;font-size:24px;cursor:pointer;color:var(--ink3);padding:4px;line-height:1;min-width:36px;min-height:36px}
+
+/* EMPTY */
+.empty-state{text-align:center;padding:48px 24px;color:var(--ink3)}
+.empty-state .es-icon{font-size:40px;margin-bottom:12px}
+.empty-state .es-title{font-size:15px;font-weight:700;color:var(--ink2);margin-bottom:6px}
+.empty-state .es-desc{font-size:13px;line-height:1.5}
+
 /* LOADING & TOAST */
 #loading{position:fixed;inset:0;background:rgba(27,43,94,.88);display:none;align-items:center;justify-content:center;z-index:999;flex-direction:column;gap:12px}
 #loading.show{display:flex}
@@ -201,7 +195,7 @@ html,body{height:100%;font-family:var(--font);background:var(--cream);color:var(
 </head>
 <body>
 
-<!-- LOGIN -->
+<!-- LOGIN OVERLAY -->
 <div class="screen" id="scrLogin" onclick="closeLoginIfOutside(event)">
   <div class="login-logo">
     <div class="login-cross"></div>
@@ -210,8 +204,8 @@ html,body{height:100%;font-family:var(--font);background:var(--cream);color:var(
   </div>
   <div class="login-card">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
-      <h2 style="margin-bottom:0">Masuk sebagai Pelayan</h2>
-      <button onclick="document.getElementById('scrLogin').classList.remove('active')" style="background:none;border:none;color:rgba(255,255,255,.5);font-size:22px;cursor:pointer;padding:4px;line-height:1">×</button>
+      <div style="font-size:14px;font-weight:700;color:#fff">Masuk sebagai Pelayan</div>
+      <button onclick="document.getElementById('scrLogin').classList.remove('active')" style="background:none;border:none;color:rgba(255,255,255,.5);font-size:24px;cursor:pointer;padding:4px;line-height:1">×</button>
     </div>
     <div class="f-lbl">Email</div>
     <input class="f-inp" type="email" id="loginEmail" placeholder="email@gpbsi.org" autocomplete="email"/>
@@ -229,13 +223,13 @@ html,body{height:100%;font-family:var(--font);background:var(--cream);color:var(
       <span class="tb-cross">✝</span>
       <div>
         <div class="tb-title">GPBSI Liturgis</div>
-        <div class="tb-sub" id="tbSub"></div>
+        <div class="tb-sub" id="tbSub">Koordinasi Ibadah</div>
       </div>
     </div>
     <div class="tb-right">
       <span class="role-pill" id="rolePill"></span>
-      <button class="tb-logout" id="tbLoginBtn" onclick="showLogin()" title="Masuk" style="display:none;color:var(--gold);font-size:13px;font-weight:700;padding:6px 10px;border-radius:20px;border:1px solid var(--gold);background:transparent;min-width:unset">Masuk</button>
-      <button class="tb-logout" id="tbLogoutBtn" onclick="doLogout()" title="Keluar" style="display:none">⏻</button>
+      <button class="tb-btn tb-login-btn" id="tbLoginBtn" onclick="showLogin()" style="display:none">Masuk</button>
+      <button class="tb-btn tb-logout-btn" id="tbLogoutBtn" onclick="doLogout()" style="display:none">⏻</button>
     </div>
   </div>
   <div class="gold-line"></div>
@@ -249,34 +243,26 @@ html,body{height:100%;font-family:var(--font);background:var(--cream);color:var(
 <div id="toast"></div>
 
 <script>
-const SB_URL='https://ucbxyuvtcaszsldzajfc.supabase.co';
-const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVjYnh5dXZ0Y2FzenNsZHphamZjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkzMDIxNjUsImV4cCI6MjA5NDg3ODE2NX0.1pcuC2rc95yJrtMlyoGHO4A0r3Zih9UkOHxbVn5IJt0';
+const SB='https://ucbxyuvtcaszsldzajfc.supabase.co';
+const KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVjYnh5dXZ0Y2FzenNsZHphamZjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkzMDIxNjUsImV4cCI6MjA5NDg3ODE2NX0.1pcuC2rc95yJrtMlyoGHO4A0r3Zih9UkOHxbVn5IJt0';
 
 let USER=null,SESI=[],CURR=null,TAB='rundown';
 let PENGKHOTBAH=[],PELAYAN=[],expandedIdx=-1;
-let CURR_DATA={rd:{},pj:{},kr:{},jb:[]};
-let laguRows=[{urutan:1,nama:'',kode:''}];
-let jemaatRows=[{prefix:'Bapak',nama:'',diajak_oleh:''}];
+let CURR_RD=[],CURR_LAGU=[],CURR_WARTA=[],CURR_JB=[];
 
-const H=()=>({'Content-Type':'application/json','apikey':SB_KEY,'Authorization':'Bearer '+(USER?.token||SB_KEY)});
+const H=()=>({'Content-Type':'application/json','apikey':KEY,'Authorization':'Bearer '+(USER?.token||KEY)});
 const esc=s=>(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 const fmtTime=iso=>{if(!iso)return'';const d=new Date(iso),now=new Date(),diff=Math.floor((now-d)/60000);if(diff<1)return'baru saja';if(diff<60)return diff+' mnt lalu';if(diff<1440)return Math.floor(diff/60)+' jam lalu';return d.toLocaleDateString('id-ID',{day:'numeric',month:'short'});};
 const initials=n=>(n||'?').split(' ').slice(0,2).map(w=>w[0]).join('').toUpperCase();
+const api=(path,opt={})=>fetch(SB+path,{...opt,headers:{...H(),...(opt.headers||{})}}).then(r=>r.json());
 
 let toastT;
 function toast(msg,type=''){const el=document.getElementById('toast');el.textContent=msg;el.className='show '+type;clearTimeout(toastT);toastT=setTimeout(()=>el.className='',3000);}
 function loading(on,txt='Memuat...'){document.getElementById('loading').classList.toggle('show',on);document.getElementById('loadTxt').textContent=txt;}
 
 // ── AUTH ──
-function showLogin(){
-  document.getElementById('scrLogin').classList.add('active');
-  document.getElementById('loginEmail').focus();
-}
-function closeLoginIfOutside(e){
-  if(e.target===document.getElementById('scrLogin')){
-    document.getElementById('scrLogin').classList.remove('active');
-  }
-}
+function showLogin(){document.getElementById('scrLogin').classList.add('active');setTimeout(()=>document.getElementById('loginEmail').focus(),100);}
+function closeLoginIfOutside(e){if(e.target===document.getElementById('scrLogin'))document.getElementById('scrLogin').classList.remove('active');}
 
 async function doLogin(){
   const email=document.getElementById('loginEmail').value.trim();
@@ -286,16 +272,18 @@ async function doLogin(){
   if(!email||!pass){err.textContent='Email dan password harus diisi';return;}
   loading(true,'Masuk...');
   try{
-    const res=await fetch(`${SB_URL}/auth/v1/token?grant_type=password`,{method:'POST',headers:{'Content-Type':'application/json','apikey':SB_KEY},body:JSON.stringify({email,password:pass})});
+    const res=await fetch(`${SB}/auth/v1/token?grant_type=password`,{method:'POST',headers:{'Content-Type':'application/json','apikey':KEY},body:JSON.stringify({email,password:pass})});
     const auth=await res.json();
     if(!res.ok)throw new Error(auth.error_description||auth.message||'Login gagal');
-    const profiles=await fetch(`${SB_URL}/rest/v1/liturgis_users?email=eq.${encodeURIComponent(email)}&select=*`,{headers:{'apikey':SB_KEY,'Authorization':'Bearer '+auth.access_token}}).then(r=>r.json());
+    const profiles=await fetch(`${SB}/rest/v1/liturgis_users?email=eq.${encodeURIComponent(email)}&select=*`,{headers:{'apikey':KEY,'Authorization':'Bearer '+auth.access_token}}).then(r=>r.json());
     if(!profiles.length)throw new Error('Akun tidak ditemukan di daftar pengguna');
     const p=profiles[0];
     USER={id:auth.user.id,email,nama:p.nama,role:p.role,token:auth.access_token};
     localStorage.setItem('gpbsi_lit',JSON.stringify({...USER,exp:Date.now()+3600000*8}));
     document.getElementById('scrLogin').classList.remove('active');
-    await startApp();
+    applyUserUI();
+    buildNav();
+    await renderTab();
   }catch(e){err.textContent=e.message;}finally{loading(false);}
 }
 
@@ -308,123 +296,128 @@ async function restoreSession(){
 }
 
 function doLogout(){
-  localStorage.removeItem('gpbsi_lit');
-  USER=null;
-  const pill=document.getElementById('rolePill');
-  pill.textContent='Tamu';pill.className='role-pill rp-user';
+  localStorage.removeItem('gpbsi_lit');USER=null;
+  document.getElementById('rolePill').textContent='Tamu';
+  document.getElementById('rolePill').className='role-pill rp-user';
   document.getElementById('tbSub').textContent='Mode Lihat';
   document.getElementById('tbLoginBtn').style.display='flex';
   document.getElementById('tbLogoutBtn').style.display='none';
   buildNav();renderTab();
-  document.getElementById('scrLogin').classList.remove('active');
 }
 
-// ── GUEST MODE ──
-async function startGuest(){
-  document.getElementById('scrLogin').classList.remove('active');
-  document.getElementById('scrApp').classList.add('active');
-  const pill = document.getElementById('rolePill');
-  pill.textContent = 'Tamu';
-  pill.className = 'role-pill rp-user';
-  document.getElementById('tbSub').textContent = 'Mode Lihat';
-  // Show login button in topbar
-  document.getElementById('tbLoginBtn').style.display = 'flex';
-  document.getElementById('tbLogoutBtn').style.display = 'none';
-  await Promise.all([loadPengkhotbah(), loadPelayan(), loadSesi()]);
-  buildNav();
-  if(CURR) await loadCurrData();
-  await renderTab();
-}
-
-// ── START ──
-async function startApp(){
-  document.getElementById('scrLogin').classList.remove('active');
-  document.getElementById('scrApp').classList.add('active');
+function applyUserUI(){
   const rmap={admin:'rp-admin',ibadah:'rp-ibadah',pujian:'rp-pujian',koor:'rp-koor',usher:'rp-usher',user:'rp-user'};
   const pill=document.getElementById('rolePill');
   pill.textContent=USER.role.charAt(0).toUpperCase()+USER.role.slice(1);
   pill.className='role-pill '+(rmap[USER.role]||'rp-user');
   document.getElementById('tbSub').textContent=USER.nama;
-  document.getElementById('tbLoginBtn').style.display = 'none';
-  document.getElementById('tbLogoutBtn').style.display = 'flex';
-  await Promise.all([loadPengkhotbah(),loadPelayan(),loadSesi()]);
-  buildNav();
-  if(CURR)await loadCurrData();
-  await renderTab();
+  document.getElementById('tbLoginBtn').style.display='none';
+  document.getElementById('tbLogoutBtn').style.display='flex';
 }
 
-async function loadPengkhotbah(){
-  try{const r=await fetch(`${SB_URL}/rest/v1/liturgis_pengkhotbah?aktif=eq.true&order=urutan.asc`,{headers:H()}).then(r=>r.json());PENGKHOTBAH=Array.isArray(r)?r:[];}catch{PENGKHOTBAH=[];}
+// ── INIT ──
+async function init(){
+  await Promise.all([loadMaster(),loadSesi()]);
+  if(await restoreSession()){applyUserUI();}
+  else{
+    document.getElementById('tbLoginBtn').style.display='flex';
+    document.getElementById('rolePill').textContent='Tamu';
+    document.getElementById('rolePill').className='role-pill rp-user';
+    document.getElementById('tbSub').textContent='Mode Lihat';
+  }
+  buildNav();
+  if(CURR){await loadCurrData();await renderTab();}
+  else{document.getElementById('mainContent').innerHTML=buildEmpty();}
 }
-async function loadPelayan(){
-  try{const r=await fetch(`${SB_URL}/rest/v1/liturgis_pelayan?aktif=eq.true&order=urutan.asc`,{headers:H()}).then(r=>r.json());PELAYAN=Array.isArray(r)?r:[];}catch{PELAYAN=[];}
+
+async function loadMaster(){
+  const[pk,pl]=await Promise.all([
+    api('/rest/v1/liturgis_pengkhotbah?aktif=eq.true&order=urutan.asc').catch(()=>[]),
+    api('/rest/v1/liturgis_pelayan?aktif=eq.true&order=urutan.asc').catch(()=>[]),
+  ]);
+  PENGKHOTBAH=Array.isArray(pk)?pk:[];
+  PELAYAN=Array.isArray(pl)?pl:[];
 }
 
 // ── SESI ──
 async function loadSesi(){
-  loading(true,'Memuat...');
   try{
     const today=new Date().toISOString().slice(0,10);
-    const list=await fetch(`${SB_URL}/rest/v1/liturgis_sesi?select=*&tanggal=gte.${today}&order=tanggal.asc&limit=20`,{headers:H()}).then(r=>r.json());
+    const list=await api(`/rest/v1/liturgis_sesi?tanggal=gte.${today}&order=tanggal.asc&limit=20`);
     SESI=Array.isArray(list)?list:[];
     CURR=SESI.length?SESI[0]:null;
     buildSessBar();
-  }catch(e){toast('Gagal muat sesi','err');}finally{loading(false);}
+  }catch{SESI=[];CURR=null;}
 }
 
 function buildSessBar(){
   const bar=document.getElementById('sessBar');
   if(!SESI.length){bar.innerHTML='';return;}
   bar.innerHTML=SESI.map((s,i)=>`<button class="sess-btn ${i===0?'on':''}" onclick="selSess(${s.id},this)">${esc(s.label)}</button>`).join('');
-  if(USER.role==='admin'||USER.role==='ibadah')bar.innerHTML+=`<button class="sess-btn" onclick="showBuatSesi()" style="border-style:dashed;color:var(--gold2)">+ Sesi</button>`;
+  if(USER&&(USER.role==='admin'||USER.role==='ibadah'))
+    bar.innerHTML+=`<button class="sess-btn" onclick="showBuatSesi()" style="border-style:dashed;color:var(--gold2)">+ Sesi</button>`;
 }
 
 async function selSess(id,el){
   document.querySelectorAll('.sess-btn').forEach(b=>b.classList.remove('on'));
   el.classList.add('on');
-  CURR=SESI.find(s=>s.id===id)||SESI[0];
+  CURR=SESI.find(s=>s.id===id);
   expandedIdx=-1;
   await loadCurrData();
   await renderTab();
 }
 
-// ── LOAD CURRENT SESSION DATA ──
+// ── LOAD CURRENT DATA ──
 async function loadCurrData(){
-  if(!CURR){CURR_DATA={rd:{},pj:{},kr:{},jb:[]};return;}
+  if(!CURR){CURR_RD=[];CURR_LAGU=[];CURR_WARTA=[];CURR_JB=[];return;}
   const sid=CURR.id;
-  try{
-    const[rd,pj,kr,jb]=await Promise.all([
-      fetch(`${SB_URL}/rest/v1/liturgis_rundown?sesi_id=eq.${sid}`,{headers:H()}).then(r=>r.json()).catch(()=>[]),
-      fetch(`${SB_URL}/rest/v1/liturgis_pujian?sesi_id=eq.${sid}`,{headers:H()}).then(r=>r.json()).catch(()=>[]),
-      fetch(`${SB_URL}/rest/v1/liturgis_koor?sesi_id=eq.${sid}`,{headers:H()}).then(r=>r.json()).catch(()=>[]),
-      fetch(`${SB_URL}/rest/v1/liturgis_jemaat_baru?sesi_id=eq.${sid}&order=added_at.asc`,{headers:H()}).then(r=>r.json()).catch(()=>[]),
-    ]);
-    CURR_DATA={rd:rd[0]||{},pj:pj[0]||{},kr:kr[0]||{},jb:Array.isArray(jb)?jb:[]};
-    // Sync edit rows from existing data
-    syncEditRows();
-    updateStatusBar();
-  }catch{CURR_DATA={rd:{},pj:{},kr:{},jb:[]};}
+  const[rd,lg,wt,jb]=await Promise.all([
+    api(`/rest/v1/liturgis_rundown?sesi_id=eq.${sid}&order=urutan.asc`).catch(()=>[]),
+    api(`/rest/v1/liturgis_lagu?sesi_id=eq.${sid}&order=urutan.asc`).catch(()=>[]),
+    api(`/rest/v1/liturgis_warta?sesi_id=eq.${sid}&order=urutan.asc`).catch(()=>[]),
+    api(`/rest/v1/liturgis_jemaat_baru?sesi_id=eq.${sid}&order=added_at.asc`).catch(()=>[]),
+  ]);
+  CURR_RD=Array.isArray(rd)?rd:[];
+  CURR_LAGU=Array.isArray(lg)?lg:[];
+  CURR_WARTA=Array.isArray(wt)?wt:[];
+  CURR_JB=Array.isArray(jb)?jb:[];
+  updateStatusBar();
 }
 
-function syncEditRows(){
-  // Sync lagu rows from pujian data
-  const lagu=CURR_DATA.pj.lagu_pembuka;
-  if(Array.isArray(lagu)&&lagu.length){
-    laguRows=lagu.map(l=>({urutan:l.urutan,nama:l.nama||'',kode:l.kode||''}));
-  } else {
-    laguRows=[{urutan:1,nama:'',kode:''}];
-  }
-  // Sync jemaat rows
-  if(CURR_DATA.jb.length){
-    jemaatRows=CURR_DATA.jb.map(j=>({prefix:j.prefix||'Bapak',nama:j.nama||'',diajak_oleh:j.diajak_oleh||''}));
-  } else {
-    jemaatRows=[{prefix:'Bapak',nama:'',diajak_oleh:''}];
-  }
+// ── STATUS BAR ──
+function updateStatusBar(){
+  const bar=document.getElementById('statusBar');
+  const inner=document.getElementById('statusBarInner');
+  if(!bar||!inner)return;
+  const ONE_HOUR=60*60*1000;
+  const now=Date.now();
+  const items=[];
+  // Check warta changes
+  CURR_WARTA.forEach(w=>{
+    if(w.added_at&&now-new Date(w.added_at).getTime()<ONE_HOUR)
+      items.push(`<div class="status-item"><div class="s-dot"></div>Warta ditambah · ${esc(w.added_by||'?')} · ${fmtTime(w.added_at)}</div>`);
+  });
+  // Check jemaat baru
+  CURR_JB.forEach(j=>{
+    if(j.added_at&&now-new Date(j.added_at).getTime()<ONE_HOUR)
+      items.push(`<div class="status-item"><div class="s-dot"></div>Jemaat baru · ${esc(j.prefix||'')} ${esc(j.nama)} · ${fmtTime(j.added_at)}</div>`);
+  });
+  // Check rundown changes
+  CURR_RD.forEach(r=>{
+    if(r.updated_at&&now-new Date(r.updated_at).getTime()<ONE_HOUR&&r.updated_by)
+      items.push(`<div class="status-item"><div class="s-dot"></div>${esc(r.judul)} diubah · ${esc(r.updated_by)} · ${fmtTime(r.updated_at)}</div>`);
+  });
+  inner.innerHTML=items.slice(0,4).join('');
+  bar.classList.toggle('show',items.length>0);
 }
 
 // ── NAV ──
-const canEdit=()=>['admin','ibadah','pujian','koor','usher'].includes(USER?.role);
+const canEdit=()=>USER&&['admin','ibadah','pujian','koor','usher'].includes(USER.role);
 const isAdmin=()=>USER?.role==='admin';
+const isIbadah=()=>USER&&['admin','ibadah'].includes(USER.role);
+const isPujian=()=>USER&&['admin','pujian'].includes(USER.role);
+const isKoor=()=>USER&&['admin','koor'].includes(USER.role);
+const isUsher=()=>USER&&['admin','usher'].includes(USER.role);
 
 function buildNav(){
   const tabs=['rundown'];
@@ -447,10 +440,7 @@ async function switchTab(tab,el){
 }
 
 async function renderTab(){
-  if(!CURR&&TAB!=='admin'){
-    document.getElementById('mainContent').innerHTML=`<div class="empty-state"><div class="es-icon">📅</div><div class="es-title">Belum ada sesi ibadah</div><div class="es-desc">Admin dapat membuat sesi baru${isAdmin()?'':' melalui akun Admin'}</div>${isAdmin()?'<button class="btn-save" style="margin-top:16px;max-width:200px;margin-inline:auto" onclick="goAdmin()">+ Buat Sesi Baru</button>':''}</div>`;
-    return;
-  }
+  if(!CURR&&TAB!=='admin'){document.getElementById('mainContent').innerHTML=buildEmpty();return;}
   loading(true);
   try{
     const c=document.getElementById('mainContent');
@@ -461,363 +451,280 @@ async function renderTab(){
   finally{loading(false);}
 }
 
-// ── STATUS BAR ──
-function updateStatusBar(){
-  const{rd,jb}=CURR_DATA;
-  const bar=document.getElementById('statusBar');
-  const inner=document.getElementById('statusBarInner');
-  if(!bar||!inner)return;
-  const ONE_HOUR=60*60*1000;
-  const now=Date.now();
-  const items=[];
-
-  // Check warta
-  if(rd.updated_at_ibadah){
-    const diff=now-new Date(rd.updated_at_ibadah).getTime();
-    if(diff<ONE_HOUR&&rd.updated_by_ibadah){
-      items.push(`<div class="status-item"><div class="status-dot"></div>Warta diubah · ${esc(rd.updated_by_ibadah)} · ${fmtTime(rd.updated_at_ibadah)}</div>`);
-    }
-  }
-
-  // Check jemaat baru
-  if(jb.length){
-    const latest=jb[jb.length-1];
-    if(latest.added_at){
-      const diff=now-new Date(latest.added_at).getTime();
-      if(diff<ONE_HOUR&&latest.added_by){
-        items.push(`<div class="status-item"><div class="status-dot"></div>Jemaat baru ditambah · ${esc(latest.added_by)} · ${fmtTime(latest.added_at)}</div>`);
-      }
-    }
-  }
-
-  if(items.length){
-    inner.innerHTML=items.join('');
-    bar.classList.add('show');
-  }else{
-    bar.classList.remove('show');
-    inner.innerHTML='';
-  }
+function buildEmpty(){
+  return`<div class="empty-state"><div class="es-icon">📅</div><div class="es-title">Belum ada sesi ibadah</div>
+  <div class="es-desc">${USER?'Buat sesi baru dengan tombol + Sesi di atas':'Tidak ada ibadah yang akan datang'}</div>
+  ${isIbadah()?`<button class="btn-save" style="margin-top:16px;max-width:200px;margin-inline:auto" onclick="showBuatSesi()">+ Buat Sesi</button>`:''}</div>`;
 }
 
-// ── TEMPLATE ──
-const TMPL_MINGGU1=[
-  {key:'pujian_pembuka',name:'Pujian Pembuka',src:'pujian'},
-  {key:'doa_teduh',name:'Doa Teduh',sub:'Semua jemaat'},
-  {key:'pengakuan_iman',name:'Pengakuan Iman Rasuli',sub:'Semua — berdiri'},
-  {key:'pujian_sebelum',name:'Pujian Sebelum Khotbah',src:'ibadah'},
-  {key:'bertanggapan',name:'Bertanggapan',src:'ibadah'},
-  {key:'berdoa',name:'Berdoa',src:'ibadah',field:'liturgis'},
-  {key:'roti_hidup',name:'Roti Hidup',src:'ibadah'},
-  {key:'khotbah',name:'Khotbah',src:'ibadah'},
-  {key:'lagu_koor_utama',name:'Lagu Koor Bukit Sion',src:'koor'},
-  {key:'pujian_setelah',name:'Pujian Setelah Khotbah',src:'ibadah'},
-  {key:'doa_persembahan',name:'Doa Persembahan',src:'ibadah',field:'liturgis'},
-  {key:'persembahan',name:'Persembahan',src:'ibadah',field:'petugas_persembahan'},
-  {key:'lagu_koor_persembahan',name:'Lagu Koor Persembahan',src:'koor'},
-  {key:'penyambutan',name:'Penyambutan Jemaat',sub:'Semua jemaat'},
-  {key:'warta',name:'Warta Jemaat',src:'ibadah'},
-  {key:'jemaat_baru',name:'Jemaat Baru',src:'usher'},
-  {key:'pujian_penutup',name:'Pujian Penutup',src:'ibadah'},
-  {key:'pemberkatan',name:'Pemberkatan',src:'ibadah',field:'pembicara'},
-];
-const TMPL_MINGGU2=[
-  {key:'pujian_pembuka',name:'Pujian Pembuka',src:'pujian'},
-  {key:'doa_seruan',name:'Doa Seruan',sub:'Semua jemaat'},
-  {key:'doa_pembuka',name:'Doa Pembuka',src:'ibadah',field:'liturgis'},
-  {key:'roti_hidup',name:'Ayat Pembacaan',src:'ibadah'},
-  {key:'khotbah',name:'Khotbah',src:'ibadah'},
-  {key:'pujian_setelah',name:'Pujian Setelah Khotbah',src:'ibadah'},
-  {key:'doa_seruan2',name:'Doa Seruan',sub:'Semua jemaat'},
-  {key:'doa_persembahan',name:'Doa Persembahan',src:'ibadah',field:'liturgis'},
-  {key:'persembahan',name:'Persembahan',src:'ibadah',field:'petugas_persembahan'},
-  {key:'warta',name:'Warta Jemaat',src:'ibadah'},
-  {key:'jemaat_baru',name:'Jemaat Baru',src:'usher'},
-  {key:'pujian_penutup',name:'Pujian Penutup',src:'ibadah'},
-  {key:'pemberkatan',name:'Pemberkatan',src:'ibadah',field:'pembicara'},
-];
-const TMPL_RABU=[
-  {key:'pujian_pembuka',name:'Pujian Pembuka',src:'pujian'},
-  {key:'doa_seruan',name:'Doa Seruan',sub:'Semua jemaat'},
-  {key:'roti_hidup',name:'Ayat Pembacaan',src:'ibadah'},
-  {key:'khotbah',name:'Khotbah',src:'ibadah'},
-  {key:'pujian_setelah',name:'Pujian Setelah Khotbah',src:'ibadah'},
-  {key:'doa_persembahan',name:'Doa Persembahan',src:'ibadah',field:'liturgis'},
-  {key:'persembahan',name:'Persembahan',src:'ibadah',field:'petugas_persembahan'},
-  {key:'warta',name:'Warta Jemaat',src:'ibadah'},
-  {key:'jemaat_baru',name:'Jemaat Baru',src:'usher'},
-  {key:'pujian_penutup',name:'Pujian Penutup',src:'ibadah'},
-  {key:'pemberkatan',name:'Pemberkatan',src:'ibadah',field:'pembicara'},
-];
-
-function getTemplate(){
-  if(CURR.tipe==='minggu2')return TMPL_MINGGU2;
-  if(CURR.tipe==='rabu')return TMPL_RABU;
-  return TMPL_MINGGU1;
-}
-
-// Get summary text for each item
-function getItemSummary(item){
-  const{rd,pj,kr,jb}=CURR_DATA;
-  const k=item.key;
-  if(k==='pujian_pembuka'){
-    const lagu=pj.lagu_pembuka;
-    if(Array.isArray(lagu)&&lagu.length)return lagu.map(l=>l.nama+(l.kode?' ('+l.kode+')':'')).join(' · ');
-    return null;
-  }
-  if(k==='khotbah'){
-    if(rd.judul_khotbah)return rd.judul_khotbah+(rd.pembicara?' — '+rd.pembicara:'');
-    return null;
-  }
-  if(k==='roti_hidup')return rd.roti_hidup||null;
-  if(k==='pujian_sebelum')return rd.pujian_sebelum||null;
-  if(k==='bertanggapan')return rd.bertanggapan||null;
-  if(k==='pujian_setelah')return rd.pujian_setelah||null;
-  if(k==='pujian_penutup')return rd.pujian_penutup||null;
-  if(k==='berdoa'||k==='doa_pembuka'||k==='doa_persembahan')return rd.liturgis||null;
-  if(k==='pemberkatan')return rd.pembicara||null;
-  if(k==='persembahan')return rd.petugas_persembahan||null;
-  if(k==='lagu_koor_utama')return kr.lagu_koor_utama||null;
-  if(k==='lagu_koor_persembahan')return kr.lagu_koor_persembahan||null;
-  if(k==='warta'){const w=rd.warta;return Array.isArray(w)&&w.length?w.length+' warta':null;}
-  if(k==='jemaat_baru')return jb.length?jb.length+' orang':null;
-  return item.sub||null;
-}
-
-function isItemRequired(item){return!!item.src;}
-
-function getItemDetail(item){
-  const{rd,pj,kr,jb}=CURR_DATA;
-  const k=item.key;
-  let rows=[];
-  const drow=(lbl,val)=>`<div class="rd-drow"><span class="rd-dl">${lbl}</span><span class="rd-dv ${val?'':'empty'}">${val?esc(val):'Belum diisi'}</span></div>`;
-
-  if(k==='pujian_pembuka'){
-    const lagu=pj.lagu_pembuka;
-    if(Array.isArray(lagu)&&lagu.length)lagu.forEach(l=>rows.push(drow('Lagu '+l.urutan,l.nama+(l.kode?' ('+l.kode+')':""))));
-    else rows.push(drow('Lagu',''));
-    if(pj.updated_by)rows.push(`<div class="rd-upd">✏ ${esc(pj.updated_by)} · ${fmtTime(pj.updated_at)}</div>`);
-  }else if(k==='khotbah'){
-    rows.push(drow('Judul',rd.judul_khotbah));
-    rows.push(drow('Pembicara',rd.pembicara));
-    if(rd.updated_by_ibadah)rows.push(`<div class="rd-upd">✏ ${esc(rd.updated_by_ibadah)} · ${fmtTime(rd.updated_at_ibadah)}</div>`);
-  }else if(k==='roti_hidup'){
-    rows.push(drow('Ayat',rd.roti_hidup));
-    if(rd.updated_by_ibadah)rows.push(`<div class="rd-upd">✏ ${esc(rd.updated_by_ibadah)} · ${fmtTime(rd.updated_at_ibadah)}</div>`);
-  }else if(['pujian_sebelum','bertanggapan','pujian_setelah','pujian_penutup'].includes(k)){
-    rows.push(drow('Nomor',rd[k]));
-    if(rd.updated_by_ibadah)rows.push(`<div class="rd-upd">✏ ${esc(rd.updated_by_ibadah)} · ${fmtTime(rd.updated_at_ibadah)}</div>`);
-  }else if(['berdoa','doa_pembuka','doa_persembahan'].includes(k)){
-    rows.push(drow('Liturgis',rd.liturgis));
-  }else if(k==='pemberkatan'){
-    rows.push(drow('Pembicara',rd.pembicara));
-  }else if(k==='persembahan'){
-    rows.push(drow('Petugas',rd.petugas_persembahan));
-    if(rd.updated_by_ibadah)rows.push(`<div class="rd-upd">✏ ${esc(rd.updated_by_ibadah)} · ${fmtTime(rd.updated_at_ibadah)}</div>`);
-  }else if(k==='lagu_koor_utama'){
-    rows.push(drow('Lagu',kr.lagu_koor_utama));
-    if(kr.updated_by)rows.push(`<div class="rd-upd">✏ ${esc(kr.updated_by)} · ${fmtTime(kr.updated_at)}</div>`);
-  }else if(k==='lagu_koor_persembahan'){
-    rows.push(drow('Lagu',kr.lagu_koor_persembahan));
-    if(kr.updated_by)rows.push(`<div class="rd-upd">✏ ${esc(kr.updated_by)} · ${fmtTime(kr.updated_at)}</div>`);
-  }else if(k==='warta'){
-    const w=rd.warta;
-    if(Array.isArray(w)&&w.length)w.forEach((t,i)=>rows.push(`<div class="rd-drow"><span class="rd-dl">${i+1}.</span><span class="rd-dv" style="text-align:left;line-height:1.5">${esc(t)}</span></div>`));
-    else rows.push(drow('Warta',''));
-    if(rd.updated_by_ibadah)rows.push(`<div class="rd-upd">✏ ${esc(rd.updated_by_ibadah)} · ${fmtTime(rd.updated_at_ibadah)}</div>`);
-  }else if(k==='jemaat_baru'){
-    if(jb.length)jb.forEach(j=>rows.push(`<div class="rd-drow"><span class="rd-dl">${esc(j.prefix||'')} ${esc(j.nama)}</span><span class="rd-dv">Diajak: ${esc(j.diajak_oleh||'—')}</span></div>`));
-    else rows.push(drow('Jemaat baru',''));
-  }else{
-    rows.push(`<div class="rd-drow"><span class="rd-dl">Keterangan</span><span class="rd-dv muted">${esc(item.sub||'—')}</span></div>`);
-  }
-  return `<div class='rd-detail-header'>Detail</div>`+rows.join('');
-}
-
-// ── RUNDOWN BUILD ──
+// ── RUNDOWN ──
 function buildRundown(){
-  const tmpl=getTemplate();
-  const{rd,pj,kr,jb}=CURR_DATA;
+  if(!CURR_RD.length){
+    return`<div class="card"><div class="empty-state" style="padding:24px"><div class="es-icon">📋</div>
+    <div class="es-title">Rundown belum diisi</div>
+    <div class="es-desc">${isIbadah()?'Buka tab Edit untuk mengisi rundown ibadah ini':'Bagian Ibadah belum mengisi rundown'}</div>
+    </div></div>`;
+  }
+  const req=CURR_RD.filter(r=>r.tipe_data&&r.tipe_data!=='');
+  const filled=req.filter(r=>getItemFilled(r));
+  const pct=req.length?Math.round(filled.length/req.length*100):100;
+  const barCls=pct===100?'':pct>=60?'warn':'danger';
 
-  // Calculate completion
-  const required=tmpl.filter(i=>i.src);
-  const filled=required.filter(i=>getItemSummary(i));
-  const pct=required.length?Math.round(filled.length/required.length*100):100;
-  const barClass=pct===100?'':pct>=60?'warn':'danger';
+  const progress=`<div class="progress-wrap">
+    <div class="progress-label"><span>${esc(CURR.label)}</span><span>${filled.length}/${req.length} terisi</span></div>
+    <div class="progress-bar-bg"><div class="progress-bar ${barCls}" style="width:${pct}%"></div></div>
+    <div style="font-size:11px;margin-top:6px;font-weight:600;color:${pct===100?'var(--green)':'var(--amber)'}">
+      ${pct===100?'✓ Semua data sudah terisi':'⚠ Ada data yang belum diisi'}
+    </div></div>`;
 
-  const progressHTML=`<div class="progress-wrap">
-    <div class="progress-label"><span>${CURR.label}</span><span>${filled.length}/${required.length} terisi</span></div>
-    <div class="progress-bar-bg"><div class="progress-bar ${barClass}" style="width:${pct}%"></div></div>
-    ${pct<100?'<div style="font-size:11px;color:var(--amber);margin-top:6px;font-weight:600">⚠ Ada data yang belum diisi</div>':'<div style="font-size:11px;color:var(--green);margin-top:6px;font-weight:600">✓ Semua data sudah terisi</div>'}
-  </div>`;
-
-  const items=tmpl.map((item,i)=>{
-    const summary=getItemSummary(item);
-    const required=isItemRequired(item);
-    const isEmpty=required&&!summary;
+  const items=CURR_RD.map((r,i)=>{
+    const summary=getItemSummary(r);
+    const hasData=r.tipe_data&&r.tipe_data!=='';
+    const isEmpty=hasData&&!summary;
     const isExp=expandedIdx===i;
-
-    const dotHTML=required?(isEmpty?'<div class="dot-empty"></div>':'<div class="dot-ok"></div>'):'';
-    const subHTML=summary
-      ?`<div class="rd-sub">${esc(summary)}</div>`
-      :required
-        ?`<div class="rd-sub empty">⚠ Belum diisi</div>`
-        :`<div class="rd-sub muted">${esc(item.sub||'')}</div>`;
-
-    // Recent change indicator
-    let recentChange='';
-    if(item.src==='ibadah'&&rd.updated_at_ibadah){const diff=Math.floor((Date.now()-new Date(rd.updated_at_ibadah))/60000);if(diff<120)recentChange=`<div class="rd-upd-badge">Diubah ${fmtTime(rd.updated_at_ibadah)}</div>`;}
-    if(item.src==='pujian'&&pj.updated_at){const diff=Math.floor((Date.now()-new Date(pj.updated_at))/60000);if(diff<120)recentChange=`<div class="rd-upd-badge">Diubah ${fmtTime(pj.updated_at)}</div>`;}
-    if(item.src==='koor'&&kr.updated_at){const diff=Math.floor((Date.now()-new Date(kr.updated_at))/60000);if(diff<120)recentChange=`<div class="rd-upd-badge">Diubah ${fmtTime(kr.updated_at)}</div>`;}
-
-    const chipNew=item.key==='jemaat_baru'&&jb.length?`<span class="chip-new">${jb.length}</span>`:'';
-
-    return`<div class="rd-item ${isExp?'expanded':''} ${isEmpty?'rd-empty':''}" onclick="toggleExpand(${i}, event)" style="${isEmpty?'border-left:3px solid var(--red)':''}">
+    const dot=hasData?(isEmpty?'<div class="dot-empty"></div>':'<div class="dot-ok"></div>'):'';
+    const chipNew=r.tipe_data==='jemaat'&&CURR_JB.length?`<span class="chip-new">${CURR_JB.length}</span>`:'';
+    const subHTML=summary?`<div class="rd-sub">${esc(summary)}</div>`:
+      hasData?`<div class="rd-sub empty">⚠ Belum diisi</div>`:
+      `<div class="rd-sub muted">${esc(r.petugas||'')}</div>`;
+    const recentBadge=r.updated_at&&(Date.now()-new Date(r.updated_at).getTime())<3600000?
+      `<div class="rd-upd-badge">Diubah ${fmtTime(r.updated_at)} · ${esc(r.updated_by||'')}</div>`:'';
+    return`<div class="rd-item ${isExp?'expanded':''}" onclick="toggleExpand(${i},event)" style="${isEmpty?'border-left:3px solid var(--red)':''}">
       <div class="rd-n">${i+1}</div>
       <div class="rd-body">
-        <div class="rd-name">${esc(item.name)}</div>
-        ${subHTML}
-        ${recentChange}
+        <div class="rd-name">${esc(r.judul)}</div>
+        ${subHTML}${recentBadge}
       </div>
-      ${dotHTML}${chipNew}
+      ${dot}${chipNew}
     </div>
-    <div class="rd-detail ${isExp?'show':''}">${getItemDetail(item)}</div>`;
+    <div class="rd-detail ${isExp?'show':''}">
+      <div class="rd-detail-hdr">Detail</div>
+      ${buildItemDetail(r)}
+    </div>`;
   }).join('');
 
-  setTimeout(updateStatusBar, 0);
-  return progressHTML+`<div class="rd-wrap">${items}</div>`;
+  return progress+`<div class="rd-wrap">${items}</div>`;
 }
 
-function toggleExpand(i, event){
-  // Ripple effect
-  const item = event.currentTarget;
-  const ripple = document.createElement('div');
-  ripple.className = 'ripple';
-  const rect = item.getBoundingClientRect();
-  const size = Math.max(rect.width, rect.height);
-  ripple.style.cssText = `width:${size}px;height:${size}px;left:${(event.clientX||rect.left+rect.width/2)-rect.left-size/2}px;top:${(event.clientY||rect.top+rect.height/2)-rect.top-size/2}px`;
+function getItemFilled(r){
+  const td=r.tipe_data;
+  if(td==='lagu')return CURR_LAGU.filter(l=>l.rundown_id===r.id).length>0||(r.nilai&&r.nilai.trim());
+  if(td==='warta')return CURR_WARTA.length>0;
+  if(td==='jemaat')return true; // optional
+  if(td==='khotbah')return r.nilai&&r.nilai.trim();
+  if(td==='bacaan')return r.nilai&&r.nilai.trim();
+  if(td==='petugas')return r.nilai&&r.nilai.trim();
+  return true;
+}
+
+function getItemSummary(r){
+  const td=r.tipe_data;
+  if(!td)return r.petugas||'';
+  if(td==='lagu'){
+    const lagu=CURR_LAGU.filter(l=>l.rundown_id===r.id);
+    if(lagu.length)return lagu.map(l=>l.nama+(l.kode?' ('+l.kode+')':'')).join(' · ');
+    return r.nilai||null;
+  }
+  if(td==='warta')return CURR_WARTA.length?CURR_WARTA.length+' warta':null;
+  if(td==='jemaat')return CURR_JB.length?CURR_JB.length+' orang':null;
+  if(td==='khotbah')return r.nilai||null;
+  if(td==='bacaan')return r.nilai||null;
+  if(td==='petugas')return r.nilai||null;
+  return r.petugas||'';
+}
+
+function buildItemDetail(r){
+  const td=r.tipe_data;
+  const drow=(l,v)=>`<div class="rd-drow"><span class="rd-dl">${l}</span><span class="rd-dv ${v?'':'empty'}">${v?esc(v):'Belum diisi'}</span></div>`;
+
+  if(td==='lagu'){
+    const lagu=CURR_LAGU.filter(l=>l.rundown_id===r.id);
+    if(!lagu.length&&!r.nilai)return drow('Lagu','');
+    const rows=lagu.length?lagu.map(l=>`<div class="rd-drow"><span class="rd-dl">Lagu ${l.urutan}</span>
+      <div style="text-align:right"><div class="rd-dv">${esc(l.nama)}${l.kode?` <span style="color:var(--ink3);font-weight:400">(${esc(l.kode)})</span>`:''}</div>
+      ${l.added_by?`<div style="font-size:10px;color:var(--ink4);font-style:italic">${esc(l.added_by)} · ${fmtTime(l.added_at)}</div>`:''}
+      </div></div>`).join(''):[drow('Nomor',r.nilai)];
+    return rows.join('');
+  }
+  if(td==='khotbah'){
+    // nilai format: "judul||pembicara"
+    const parts=(r.nilai||'').split('||');
+    return drow('Judul',parts[0])+drow('Pembicara',parts[1])+(r.updated_by?`<div class="rd-upd">✏ ${esc(r.updated_by)} · ${fmtTime(r.updated_at)}</div>`:'');
+  }
+  if(td==='bacaan')return drow('Ayat',r.nilai)+(r.updated_by?`<div class="rd-upd">✏ ${esc(r.updated_by)} · ${fmtTime(r.updated_at)}</div>`:'');
+  if(td==='petugas')return drow('Petugas',r.nilai)+(r.updated_by?`<div class="rd-upd">✏ ${esc(r.updated_by)} · ${fmtTime(r.updated_at)}</div>`:'');
+  if(td==='warta'){
+    if(!CURR_WARTA.length)return drow('Warta','');
+    return CURR_WARTA.map((w,i)=>`<div class="rd-drow">
+      <span class="rd-dl">${i+1}.</span>
+      <div style="text-align:left;flex:1"><div class="rd-dv" style="text-align:left;line-height:1.5">${esc(w.isi)}</div>
+      ${w.added_by?`<div style="font-size:10px;color:var(--ink4);font-style:italic">${esc(w.added_by)} · ${fmtTime(w.added_at)}</div>`:''}
+      </div></div>`).join('');
+  }
+  if(td==='jemaat'){
+    if(!CURR_JB.length)return drow('Jemaat baru','');
+    return CURR_JB.map(j=>`<div class="rd-drow">
+      <span class="rd-dl">${esc(j.prefix)} ${esc(j.nama)}</span>
+      <div style="text-align:right"><div class="rd-dv">Diajak: ${esc(j.diajak_oleh||'—')}</div>
+      ${j.added_by?`<div style="font-size:10px;color:var(--ink4);font-style:italic">${esc(j.added_by)} · ${fmtTime(j.added_at)}</div>`:''}
+      </div></div>`).join('');
+  }
+  return drow('Keterangan',r.petugas);
+}
+
+function toggleExpand(i,event){
+  const item=event.currentTarget;
+  const ripple=document.createElement('div');
+  ripple.className='ripple';
+  const rect=item.getBoundingClientRect();
+  const size=Math.max(rect.width,rect.height);
+  ripple.style.cssText=`width:${size}px;height:${size}px;left:${(event.clientX||rect.left+rect.width/2)-rect.left-size/2}px;top:${(event.clientY||rect.top+rect.height/2)-rect.top-size/2}px`;
   item.appendChild(ripple);
-  setTimeout(()=>ripple.remove(), 400);
-  // Toggle
+  setTimeout(()=>ripple.remove(),400);
   expandedIdx=expandedIdx===i?-1:i;
   renderTab();
-  // Scroll to item after render
-  if(expandedIdx===i){
-    setTimeout(()=>{
-      const els=document.querySelectorAll('.rd-item');
-      if(els[i])els[i].scrollIntoView({behavior:'smooth',block:'nearest'});
-    },50);
-  }
+  if(expandedIdx===i)setTimeout(()=>{const els=document.querySelectorAll('.rd-item');if(els[i])els[i].scrollIntoView({behavior:'smooth',block:'nearest'});},50);
 }
 
-// ── EDIT BUILD ──
+// ── EDIT ──
 function buildEdit(){
-  const role=USER.role;
+  if(!CURR_RD.length&&isIbadah()){
+    return`<div class="card"><div class="empty-state" style="padding:20px">
+      <div class="es-icon">📋</div>
+      <div class="es-title">Rundown kosong</div>
+      <div class="es-desc">Inisialisasi rundown dari template untuk mulai mengisi data</div>
+      <button class="btn-save" style="margin-top:16px" onclick="showInitRundown()">📋 Inisialisasi Rundown</button>
+    </div></div>`;
+  }
   let html='';
-  if(role==='pujian'||role==='admin')html+=buildEditPujian();
-  if(role==='ibadah'||role==='admin')html+=buildEditIbadah();
-  if(role==='koor'||role==='admin')html+=buildEditKoor();
-  if(role==='usher'||role==='admin')html+=buildEditUsher();
+  if(isIbadah())html+=buildEditRundown();
+  if(isPujian())html+=buildEditLagu();
+  if(isKoor())html+=buildEditKoor();
+  if(isUsher())html+=buildEditUsher();
   return html||'<div class="empty-state"><div class="es-icon">🔒</div><div class="es-title">Tidak ada akses edit</div></div>';
 }
 
-function buildEditPujian(){
-  const laguHTML=laguRows.map((l,i)=>`<div class="entry-card">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
-      <div class="entry-card-ttl">Lagu ${i+1}</div>
-      ${laguRows.length>1?`<button class="btn-remove" onclick="removeLagu(${i})">✕ Hapus</button>`:''}
-    </div>
-    <div class="e-group"><label class="e-lbl">Nama Lagu</label>
-      <input class="e-inp" value="${esc(l.nama)}" placeholder="Nama lagu..." oninput="laguRows[${i}].nama=this.value"/></div>
-    <div class="e-group" style="margin-bottom:0"><label class="e-lbl">Kode (KPPK / Kr / No.)</label>
-      <input class="e-inp" value="${esc(l.kode)}" placeholder="mis. Kppk 363" oninput="laguRows[${i}].kode=this.value"/></div>
-  </div>`).join('');
-  return`<div class="edit-section">
-    <div class="edit-section-hd" onclick="toggleSection(this)">
-      <div class="edit-section-ttl">🎵 Pujian Pembuka</div>
-      <span style="color:var(--ink4);font-size:12px">▼</span>
-    </div>
-    <div class="edit-section-body open">
-      ${laguHTML}
-      <button class="btn-add-sm" onclick="addLagu()">+ Tambah Lagu</button>
-      <button class="btn-save" onclick="savePujian()" style="margin-top:10px">💾 Simpan Pujian Pembuka</button>
-      <div class="save-hint">Langsung terlihat oleh semua pengguna</div>
-    </div>
-  </div>`;
-}
+// Edit Rundown — Ibadah mengisi nilai per item + bisa edit judul
+function buildEditRundown(){
+  const pdtOpts=PENGKHOTBAH.map(p=>`<option value="${esc(p.nama)}">${esc(p.nama)}</option>`).join('');
+  const litOpts=PELAYAN.map(p=>`<option value="${esc(p.jabatan+' '+p.nama)}">${esc(p.jabatan+' '+p.nama)}</option>`).join('');
 
-function buildEditIbadah(){
-  const rd=CURR_DATA.rd;
-  const pdtOpts=PENGKHOTBAH.map(p=>`<option value="${esc(p.nama)}" ${rd.pembicara===p.nama?'selected':''}>${esc(p.nama)}</option>`).join('');
-  const litOpts=PELAYAN.map(p=>`<option value="${esc(p.jabatan+' '+p.nama)}" ${rd.liturgis===(p.jabatan+' '+p.nama)?'selected':''}>${esc(p.jabatan+' '+p.nama)}</option>`).join('');
-  const warta=Array.isArray(rd.warta)?rd.warta.join('\n'):'';
+  const items=CURR_RD.map(r=>{
+    const td=r.tipe_data;
+    let input='';
+    if(td==='khotbah'){
+      const parts=(r.nilai||'').split('||');
+      input=`<div class="e-group"><label class="e-lbl">Judul Khotbah</label>
+        <input class="e-inp" id="rd_judul_${r.id}" value="${esc(parts[0]||'')}" placeholder="Judul khotbah..."/></div>
+        <div class="e-group"><label class="e-lbl">Pembicara</label>
+        <select class="e-sel" id="rd_pem_${r.id}"><option value="">— Pilih —</option>${pdtOpts.replace(`value="${esc(parts[1]||'')}"`,`value="${esc(parts[1]||'')}" selected`)}</select></div>`;
+    }else if(td==='bacaan'){
+      input=`<div class="e-group"><label class="e-lbl">Ayat / Bacaan</label>
+        <input class="e-inp" id="rd_val_${r.id}" value="${esc(r.nilai||'')}" placeholder="mis. Kej 45:1-4"/></div>`;
+    }else if(td==='petugas'){
+      if(r.judul.toLowerCase().includes('berdoa')||r.judul.toLowerCase().includes('pembuka')||r.judul.toLowerCase().includes('persembahan')){
+        input=`<div class="e-group"><label class="e-lbl">Liturgis</label>
+          <select class="e-sel" id="rd_val_${r.id}"><option value="">— Pilih —</option>${litOpts.replace(`value="${esc(r.nilai||'')}"`,`value="${esc(r.nilai||'')}" selected`)}</select></div>`;
+      }else if(r.judul.toLowerCase().includes('persembahan')){
+        input=`<div class="e-group"><label class="e-lbl">Petugas Persembahan</label>
+          <input class="e-inp" id="rd_val_${r.id}" value="${esc(r.nilai||'')}" placeholder="mis. Pnt. Gustam, Joshua"/></div>`;
+      }else if(r.judul.toLowerCase().includes('berkatan')||r.judul.toLowerCase().includes('pemberkatan')){
+        input=`<div class="e-group"><label class="e-lbl">Pembicara</label>
+          <select class="e-sel" id="rd_val_${r.id}"><option value="">— Pilih —</option>${pdtOpts.replace(`value="${esc(r.nilai||'')}"`,`value="${esc(r.nilai||'')}" selected`)}</select></div>`;
+      }else{
+        input=`<div class="e-group"><label class="e-lbl">Petugas</label>
+          <input class="e-inp" id="rd_val_${r.id}" value="${esc(r.nilai||'')}" placeholder="Nama petugas..."/></div>`;
+      }
+    }else if(td==='lagu'&&!r.judul.toLowerCase().includes('pembuka')&&!r.judul.toLowerCase().includes('koor')){
+      input=`<div class="e-group"><label class="e-lbl">Nomor / Nama Lagu</label>
+        <input class="e-inp" id="rd_val_${r.id}" value="${esc(r.nilai||'')}" placeholder="mis. 56 - S'lama Seminggu Lalu"/></div>`;
+    }else if(td===''){
+      input=''; // no input needed
+    }
+
+    if(!input&&td!=='lagu'&&td!=='warta'&&td!=='jemaat')return'';
+
+    return`<div class="item-card">
+      <div class="item-card-hd">
+        <div class="item-card-ttl">${esc(r.judul)}</div>
+        ${isAdmin()?`<button class="btn-remove" onclick="editItemJudul(${r.id},'${esc(r.judul)}','${esc(r.petugas||'')}')">✏</button>`:''}
+      </div>
+      ${input}
+      ${td&&td!==''?`<button onclick="saveRundownItem(${r.id},'${td}')" style="padding:10px 16px;background:var(--navy);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:var(--font);width:100%">💾 Simpan</button>`:''}
+    </div>`;
+  }).filter(Boolean).join('');
+
   return`<div class="edit-section">
     <div class="edit-section-hd" onclick="toggleSection(this)">
       <div class="edit-section-ttl">📋 Data Ibadah</div>
       <span style="color:var(--ink4);font-size:12px">▼</span>
     </div>
     <div class="edit-section-body open">
-      <div class="e-group"><label class="e-lbl">Liturgis</label>
-        <select class="e-sel" id="eLiturgis"><option value="">— Pilih —</option>${litOpts}</select></div>
-      <div class="e-group"><label class="e-lbl">Roti Hidup / Ayat Pembacaan</label>
-        <input class="e-inp" id="eRotiHidup" value="${esc(rd.roti_hidup||'')}" placeholder="mis. Kej 45:1-4"/></div>
-      <div class="e-group"><label class="e-lbl">Judul Khotbah</label>
-        <input class="e-inp" id="eJudul" value="${esc(rd.judul_khotbah||'')}" placeholder="Judul khotbah..."/></div>
-      <div class="e-group"><label class="e-lbl">Pembicara</label>
-        <select class="e-sel" id="ePembicara"><option value="">— Pilih —</option>${pdtOpts}</select></div>
-      <div class="e-group"><label class="e-lbl">Pujian Sebelum Khotbah</label>
-        <input class="e-inp" id="ePujianSebelum" value="${esc(rd.pujian_sebelum||'')}" placeholder="mis. 56 - S'lama Seminggu Lalu"/></div>
-      <div class="e-group"><label class="e-lbl">Bertanggapan</label>
-        <input class="e-inp" id="eBertanggapan" value="${esc(rd.bertanggapan||'')}" placeholder="mis. No. 16 Mazmur 63"/></div>
-      <div class="e-group"><label class="e-lbl">Pujian Setelah Khotbah</label>
-        <input class="e-inp" id="ePujianSetelah" value="${esc(rd.pujian_setelah||'')}" placeholder="mis. 214(Kr) - Marilah Nyanyikan"/></div>
-      <div class="e-group"><label class="e-lbl">Pujian Penutup</label>
-        <select class="e-sel" id="ePujianPenutup">
-          <option value="">— Pilih —</option>
-          <option value="No. 6 — Bapa, Anak dan Roh Kudus" ${rd.pujian_penutup==='No. 6 — Bapa, Anak dan Roh Kudus'?'selected':''}>No. 6 — Bapa, Anak dan Roh Kudus</option>
-          <option value="No. 53 — Doxologi" ${rd.pujian_penutup==='No. 53 — Doxologi'?'selected':''}>No. 53 — Doxologi</option>
-        </select></div>
-      <div class="e-group"><label class="e-lbl">Petugas Persembahan</label>
-        <input class="e-inp" id="ePetugas" value="${esc(rd.petugas_persembahan||'')}" placeholder="mis. Pnt. Gustam, Joshua, Bujang"/></div>
-      <div class="e-group"><label class="e-lbl">Warta Jemaat (satu per baris)</label>
-        <textarea class="e-ta" id="eWarta" placeholder="Warta 1&#10;Warta 2&#10;Warta 3">${esc(warta)}</textarea></div>
-      <button class="btn-save" onclick="saveIbadah()">💾 Simpan Data Ibadah</button>
-      <div class="save-hint">Langsung terlihat oleh semua pengguna</div>
+      ${items||'<div style="text-align:center;padding:16px;color:var(--ink3);font-size:13px">Tidak ada item yang perlu diisi</div>'}
+      ${isAdmin()||isIbadah()?`<button class="btn-add-sm" onclick="showTambahItem()">+ Tambah Item Rundown</button>`:''}
     </div>
   </div>`;
 }
 
+// Edit Lagu — Pujian (lagu pembuka satu per satu)
+function buildEditLagu(){
+  const rdPembuka=CURR_RD.find(r=>r.tipe_data==='lagu'&&r.judul.toLowerCase().includes('pembuka'));
+  const laguList=rdPembuka?CURR_LAGU.filter(l=>l.rundown_id===rdPembuka.id):[];
+  const laguHTML=laguList.map(l=>`<div class="item-card">
+    <div class="item-card-hd">
+      <div class="item-card-ttl">Lagu ${l.urutan}</div>
+      <div style="display:flex;align-items:center;gap:6px">
+        <div class="item-card-meta">${esc(l.added_by||'')} · ${fmtTime(l.added_at)}</div>
+        <button class="btn-remove" onclick="hapusLagu(${l.id})">×</button>
+      </div>
+    </div>
+    <div style="font-size:13px;font-weight:600">${esc(l.nama)}</div>
+    ${l.kode?`<div style="font-size:12px;color:var(--ink3);margin-top:2px">${esc(l.kode)}</div>`:''}
+  </div>`).join('');
+
+  return`<div class="edit-section">
+    <div class="edit-section-hd" onclick="toggleSection(this)">
+      <div class="edit-section-ttl">🎵 Pujian Pembuka</div>
+      <span style="color:var(--ink4);font-size:12px">▼</span>
+    </div>
+    <div class="edit-section-body open">
+      ${laguHTML||'<div style="text-align:center;padding:12px;color:var(--ink3);font-size:13px">Belum ada lagu</div>'}
+      <button class="btn-add-sm" onclick="showTambahLagu(${rdPembuka?.id||'null'})">+ Tambah Lagu</button>
+    </div>
+  </div>`;
+}
+
+// Edit Koor
 function buildEditKoor(){
-  const kr=CURR_DATA.kr;
+  const rdKoor=CURR_RD.find(r=>r.tipe_data==='lagu'&&r.judul.toLowerCase().includes('koor'));
+  const rdKoorPers=CURR_RD.find(r=>r.tipe_data==='lagu'&&r.judul.toLowerCase().includes('koor')&&r.judul.toLowerCase().includes('persembahan'));
   return`<div class="edit-section">
     <div class="edit-section-hd" onclick="toggleSection(this)">
       <div class="edit-section-ttl">🎼 Lagu Koor</div>
       <span style="color:var(--ink4);font-size:12px">▼</span>
     </div>
     <div class="edit-section-body open">
-      <div class="e-group"><label class="e-lbl">Lagu Koor Bukit Sion</label>
-        <input class="e-inp" id="eKoorUtama" value="${esc(kr.lagu_koor_utama||'')}" placeholder="mis. For the Beauty of the Earth"/></div>
-      <div class="e-group"><label class="e-lbl">Lagu Koor Persembahan</label>
-        <input class="e-inp" id="eKoorPersembahan" value="${esc(kr.lagu_koor_persembahan||'')}" placeholder="mis. 175. Yesus Cinta Padaku"/></div>
-      <button class="btn-save" onclick="saveKoor()">💾 Simpan Lagu Koor</button>
-      <div class="save-hint">Langsung terlihat oleh semua pengguna</div>
+      ${CURR_RD.filter(r=>r.tipe_data==='lagu'&&r.judul.toLowerCase().includes('koor')).map(r=>`
+        <div class="e-group"><label class="e-lbl">${esc(r.judul)}</label>
+          <input class="e-inp" id="koor_${r.id}" value="${esc(r.nilai||'')}" placeholder="Nama lagu koor..."/>
+        </div>
+        <button onclick="saveRundownVal(${r.id},'koor_${r.id}')" style="padding:10px 16px;background:var(--navy);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:var(--font);width:100%;margin-bottom:12px">💾 Simpan ${esc(r.judul)}</button>
+      `).join('')||'<div style="text-align:center;padding:12px;color:var(--ink3);font-size:13px">Tidak ada item koor di rundown</div>'}
     </div>
   </div>`;
 }
 
+// Edit Usher — Jemaat Baru
 function buildEditUsher(){
-  const prefixOpts=['Bapak','Ibu','Saudara','Saudari'];
-  const jHTML=jemaatRows.map((j,i)=>`<div class="entry-card">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
-      <div class="entry-card-ttl">Jemaat Baru ${i+1}</div>
-      ${jemaatRows.length>1?`<button class="btn-remove" onclick="removeJemaat(${i})">✕ Hapus</button>`:''}
+  const jHTML=CURR_JB.map(j=>`<div class="item-card">
+    <div class="item-card-hd">
+      <div class="item-card-ttl">${esc(j.prefix)} ${esc(j.nama)}</div>
+      <div style="display:flex;align-items:center;gap:6px">
+        <div class="item-card-meta">${esc(j.added_by||'')} · ${fmtTime(j.added_at)}</div>
+        <button class="btn-remove" onclick="hapusJemaat(${j.id})">×</button>
+      </div>
     </div>
-    <div class="e-row" style="margin-bottom:10px">
-      <select class="e-sel" style="max-width:120px" onchange="jemaatRows[${i}].prefix=this.value">
-        ${prefixOpts.map(p=>`<option ${j.prefix===p?'selected':''}>${p}</option>`).join('')}
-      </select>
-      <input class="e-inp" value="${esc(j.nama)}" placeholder="Nama lengkap" oninput="jemaatRows[${i}].nama=this.value"/>
-    </div>
-    <input class="e-inp" value="${esc(j.diajak_oleh)}" placeholder="Diajak oleh..." oninput="jemaatRows[${i}].diajak_oleh=this.value"/>
+    <div style="font-size:12px;color:var(--ink3)">Diajak oleh: <strong>${esc(j.diajak_oleh||'—')}</strong></div>
   </div>`).join('');
   return`<div class="edit-section">
     <div class="edit-section-hd" onclick="toggleSection(this)">
@@ -825,10 +732,8 @@ function buildEditUsher(){
       <span style="color:var(--ink4);font-size:12px">▼</span>
     </div>
     <div class="edit-section-body open">
-      ${jHTML}
-      <button class="btn-add-sm" onclick="addJemaat()">+ Tambah Jemaat Baru</button>
-      <button class="btn-save" onclick="saveJemaat()" style="margin-top:10px">💾 Simpan Jemaat Baru</button>
-      <div class="save-hint">Langsung terlihat oleh semua pengguna</div>
+      ${jHTML||'<div style="text-align:center;padding:12px;color:var(--ink3);font-size:13px">Belum ada jemaat baru</div>'}
+      <button class="btn-add-sm" onclick="showTambahJemaat()">+ Tambah Jemaat Baru</button>
     </div>
   </div>`;
 }
@@ -840,97 +745,308 @@ function toggleSection(hd){
   arrow.textContent=body.classList.contains('open')?'▼':'▶';
 }
 
-// ── LAGU & JEMAAT HELPERS ──
-function addLagu(){laguRows.push({urutan:laguRows.length+1,nama:'',kode:''});renderTab();}
-function removeLagu(i){laguRows.splice(i,1);laguRows.forEach((l,idx)=>l.urutan=idx+1);renderTab();}
-function addJemaat(){jemaatRows.push({prefix:'Bapak',nama:'',diajak_oleh:''});renderTab();}
-function removeJemaat(i){jemaatRows.splice(i,1);renderTab();}
-
 // ── SAVE FUNCTIONS ──
-async function savePujian(){
-  if(!confirm('Simpan pujian pembuka? Data akan langsung terlihat semua pengguna.'))return;
-  const valid=laguRows.filter(l=>l.nama.trim());
-  if(!valid.length){toast('Isi nama lagu dulu','err');return;}
+async function saveRundownItem(id, tipe){
+  let nilai='';
+  if(tipe==='khotbah'){
+    const judul=document.getElementById(`rd_judul_${id}`)?.value.trim()||'';
+    const pem=document.getElementById(`rd_pem_${id}`)?.value||'';
+    nilai=judul+'||'+pem;
+  }else{
+    nilai=document.getElementById(`rd_val_${id}`)?.value.trim()||'';
+  }
+  if(!confirm('Simpan perubahan? Data langsung terlihat semua pengguna.'))return;
   loading(true,'Menyimpan...');
   try{
-    const body={sesi_id:CURR.id,lagu_pembuka:valid.map((l,i)=>({urutan:i+1,nama:l.nama.trim(),kode:l.kode.trim()})),updated_by:USER.nama,updated_at:new Date().toISOString()};
-    if(CURR_DATA.pj.id){
-      await fetch(`${SB_URL}/rest/v1/liturgis_pujian?sesi_id=eq.${CURR.id}`,{method:'PATCH',headers:{...H(),'Prefer':'return=minimal'},body:JSON.stringify(body)});
-    }else{
-      await fetch(`${SB_URL}/rest/v1/liturgis_pujian`,{method:'POST',headers:{...H(),'Prefer':'return=minimal'},body:JSON.stringify(body)});
-    }
-    await loadCurrData();
-    toast('Pujian pembuka tersimpan ✓','ok');
+    await fetch(`${SB}/rest/v1/liturgis_rundown?id=eq.${id}`,{method:'PATCH',headers:{...H(),'Prefer':'return=minimal'},body:JSON.stringify({nilai,updated_by:USER.nama,updated_at:new Date().toISOString()})});
+    await loadCurrData();toast('Tersimpan ✓','ok');
     TAB='rundown';buildNav();await renderTab();
   }catch(e){toast('Gagal: '+e.message,'err');}finally{loading(false);}
 }
 
-async function saveIbadah(){
-  if(!confirm('Simpan data ibadah? Data akan langsung terlihat semua pengguna.'))return;
+async function saveRundownVal(id, inputId){
+  const nilai=document.getElementById(inputId)?.value.trim()||'';
+  if(!confirm('Simpan? Data langsung terlihat semua pengguna.'))return;
   loading(true,'Menyimpan...');
   try{
-    const warta=document.getElementById('eWarta').value.split('\n').map(s=>s.trim()).filter(Boolean);
-    const body={
-      sesi_id:CURR.id,
-      liturgis:document.getElementById('eLiturgis').value,
-      roti_hidup:document.getElementById('eRotiHidup').value.trim(),
-      judul_khotbah:document.getElementById('eJudul').value.trim(),
-      pembicara:document.getElementById('ePembicara').value,
-      pujian_sebelum:document.getElementById('ePujianSebelum').value.trim(),
-      bertanggapan:document.getElementById('eBertanggapan').value.trim(),
-      pujian_setelah:document.getElementById('ePujianSetelah').value.trim(),
-      pujian_penutup:document.getElementById('ePujianPenutup').value,
-      petugas_persembahan:document.getElementById('ePetugas').value.trim(),
-      warta,
-      updated_by_ibadah:USER.nama,
-      updated_at_ibadah:new Date().toISOString(),
-    };
-    if(CURR_DATA.rd.id){
-      await fetch(`${SB_URL}/rest/v1/liturgis_rundown?sesi_id=eq.${CURR.id}`,{method:'PATCH',headers:{...H(),'Prefer':'return=minimal'},body:JSON.stringify(body)});
-    }else{
-      await fetch(`${SB_URL}/rest/v1/liturgis_rundown`,{method:'POST',headers:{...H(),'Prefer':'return=minimal'},body:JSON.stringify(body)});
-    }
-    await loadCurrData();
-    toast('Data ibadah tersimpan ✓','ok');
+    await fetch(`${SB}/rest/v1/liturgis_rundown?id=eq.${id}`,{method:'PATCH',headers:{...H(),'Prefer':'return=minimal'},body:JSON.stringify({nilai,updated_by:USER.nama,updated_at:new Date().toISOString()})});
+    await loadCurrData();toast('Tersimpan ✓','ok');
     TAB='rundown';buildNav();await renderTab();
   }catch(e){toast('Gagal: '+e.message,'err');}finally{loading(false);}
 }
 
-async function saveKoor(){
-  if(!confirm('Simpan lagu koor? Data akan langsung terlihat semua pengguna.'))return;
+// ── MODAL HELPERS ──
+function showModal(ttl, bodyHTML, onClose){
+  const m=document.createElement('div');
+  m.className='modal-overlay';
+  m.id='mainModal';
+  m.innerHTML=`<div class="modal-sheet">
+    <div class="modal-hd">
+      <div class="modal-ttl">${ttl}</div>
+      <button class="modal-close" onclick="closeModal()">×</button>
+    </div>
+    ${bodyHTML}
+    <div style="height:20px"></div>
+  </div>`;
+  m.addEventListener('click',e=>{if(e.target===m)closeModal();});
+  document.body.appendChild(m);
+}
+function closeModal(){document.getElementById('mainModal')?.remove();}
+
+// ── TAMBAH LAGU (Pujian) ──
+function showTambahLagu(rdId){
+  showModal('Tambah Lagu Pembuka',`
+    <div class="e-group"><label class="e-lbl">Nama Lagu</label>
+      <input class="e-inp" id="mLaguNama" placeholder="Nama lagu..."/></div>
+    <div class="e-group"><label class="e-lbl">Kode (Kppk / Kr / No.)</label>
+      <input class="e-inp" id="mLaguKode" placeholder="mis. Kppk 363"/></div>
+    <button class="btn-save" onclick="saveLagu(${rdId})">+ Tambah Lagu</button>`);
+  setTimeout(()=>document.getElementById('mLaguNama')?.focus(),100);
+}
+
+async function saveLagu(rdId){
+  const nama=document.getElementById('mLaguNama')?.value.trim();
+  const kode=document.getElementById('mLaguKode')?.value.trim();
+  if(!nama){toast('Nama lagu harus diisi','err');return;}
   loading(true,'Menyimpan...');
+  closeModal();
   try{
-    const body={sesi_id:CURR.id,lagu_koor_utama:document.getElementById('eKoorUtama').value.trim(),lagu_koor_persembahan:document.getElementById('eKoorPersembahan').value.trim(),updated_by:USER.nama,updated_at:new Date().toISOString()};
-    if(CURR_DATA.kr.id){
-      await fetch(`${SB_URL}/rest/v1/liturgis_koor?sesi_id=eq.${CURR.id}`,{method:'PATCH',headers:{...H(),'Prefer':'return=minimal'},body:JSON.stringify(body)});
-    }else{
-      await fetch(`${SB_URL}/rest/v1/liturgis_koor`,{method:'POST',headers:{...H(),'Prefer':'return=minimal'},body:JSON.stringify(body)});
-    }
-    await loadCurrData();
-    toast('Lagu koor tersimpan ✓','ok');
-    TAB='rundown';buildNav();await renderTab();
+    const existing=rdId?CURR_LAGU.filter(l=>l.rundown_id===rdId):[];
+    await fetch(`${SB}/rest/v1/liturgis_lagu`,{method:'POST',headers:{...H(),'Prefer':'return=minimal'},
+      body:JSON.stringify({sesi_id:CURR.id,rundown_id:rdId||null,urutan:existing.length+1,nama,kode:kode||'',added_by:USER.nama,added_at:new Date().toISOString()})});
+    await loadCurrData();toast('Lagu ditambahkan ✓','ok');
+    await renderTab();
   }catch(e){toast('Gagal: '+e.message,'err');}finally{loading(false);}
+}
+
+async function hapusLagu(id){
+  if(!confirm('Hapus lagu ini?'))return;
+  loading(true,'Menghapus...');
+  try{
+    await fetch(`${SB}/rest/v1/liturgis_lagu?id=eq.${id}`,{method:'DELETE',headers:H()});
+    await loadCurrData();toast('Lagu dihapus','ok');await renderTab();
+  }catch(e){toast('Gagal: '+e.message,'err');}finally{loading(false);}
+}
+
+// ── TAMBAH WARTA (di rundown via detail atau edit) ──
+function showTambahWarta(){
+  showModal('Tambah Warta Jemaat',`
+    <div class="e-group"><label class="e-lbl">Isi Warta</label>
+      <textarea class="e-ta" id="mWartaIsi" placeholder="Tulis warta jemaat..."></textarea></div>
+    <button class="btn-save" onclick="saveWarta()">+ Tambah Warta</button>`);
+  setTimeout(()=>document.getElementById('mWartaIsi')?.focus(),100);
+}
+
+async function saveWarta(){
+  const isi=document.getElementById('mWartaIsi')?.value.trim();
+  if(!isi){toast('Isi warta harus diisi','err');return;}
+  loading(true,'Menyimpan...');
+  closeModal();
+  try{
+    await fetch(`${SB}/rest/v1/liturgis_warta`,{method:'POST',headers:{...H(),'Prefer':'return=minimal'},
+      body:JSON.stringify({sesi_id:CURR.id,urutan:CURR_WARTA.length+1,isi,added_by:USER.nama,added_at:new Date().toISOString()})});
+    await loadCurrData();toast('Warta ditambahkan ✓','ok');await renderTab();
+  }catch(e){toast('Gagal: '+e.message,'err');}finally{loading(false);}
+}
+
+// ── TAMBAH JEMAAT BARU (Usher) ──
+function showTambahJemaat(){
+  const prefOpts=['Bapak','Ibu','Saudara','Saudari'].map(p=>`<option>${p}</option>`).join('');
+  showModal('Tambah Jemaat Baru',`
+    <div class="e-row e-group">
+      <select class="e-sel" id="mJPrefix" style="max-width:120px">${prefOpts}</select>
+      <input class="e-inp" id="mJNama" placeholder="Nama lengkap"/>
+    </div>
+    <div class="e-group"><label class="e-lbl">Diajak oleh</label>
+      <input class="e-inp" id="mJDiajak" placeholder="Nama yang mengajak..."/></div>
+    <button class="btn-save" onclick="saveJemaat()">+ Tambah Jemaat Baru</button>`);
+  setTimeout(()=>document.getElementById('mJNama')?.focus(),100);
 }
 
 async function saveJemaat(){
-  if(!confirm('Simpan data jemaat baru? Data akan langsung terlihat semua pengguna.'))return;
-  const valid=jemaatRows.filter(j=>j.nama.trim());
-  if(!valid.length){toast('Isi nama jemaat dulu','err');return;}
+  const prefix=document.getElementById('mJPrefix')?.value;
+  const nama=document.getElementById('mJNama')?.value.trim();
+  const diajak=document.getElementById('mJDiajak')?.value.trim();
+  if(!nama){toast('Nama harus diisi','err');return;}
+  loading(true,'Menyimpan...');
+  closeModal();
+  try{
+    await fetch(`${SB}/rest/v1/liturgis_jemaat_baru`,{method:'POST',headers:{...H(),'Prefer':'return=minimal'},
+      body:JSON.stringify({sesi_id:CURR.id,prefix,nama,diajak_oleh:diajak||'',added_by:USER.nama,added_at:new Date().toISOString()})});
+    await loadCurrData();toast('Jemaat baru ditambahkan ✓','ok');await renderTab();
+  }catch(e){toast('Gagal: '+e.message,'err');}finally{loading(false);}
+}
+
+async function hapusJemaat(id){
+  if(!confirm('Hapus jemaat baru ini?'))return;
+  loading(true,'Menghapus...');
+  try{
+    await fetch(`${SB}/rest/v1/liturgis_jemaat_baru?id=eq.${id}`,{method:'DELETE',headers:H()});
+    await loadCurrData();toast('Data dihapus','ok');await renderTab();
+  }catch(e){toast('Gagal: '+e.message,'err');}finally{loading(false);}
+}
+
+// ── EDIT JUDUL ITEM RUNDOWN ──
+function editItemJudul(id, judulNow, petugasNow){
+  showModal('Edit Item Rundown',`
+    <div class="e-group"><label class="e-lbl">Judul Item</label>
+      <input class="e-inp" id="mItemJudul" value="${esc(judulNow)}" placeholder="Judul..."/></div>
+    <div class="e-group"><label class="e-lbl">Petugas / Keterangan</label>
+      <input class="e-inp" id="mItemPetugas" value="${esc(petugasNow)}" placeholder="mis. Semua jemaat"/></div>
+    <button class="btn-save" onclick="saveItemJudul(${id})">💾 Simpan Judul</button>
+    <button class="btn-save btn-danger" style="margin-top:8px" onclick="hapusItem(${id})">🗑 Hapus Item Ini</button>`);
+}
+
+async function saveItemJudul(id){
+  const judul=document.getElementById('mItemJudul')?.value.trim();
+  const petugas=document.getElementById('mItemPetugas')?.value.trim();
+  if(!judul){toast('Judul harus diisi','err');return;}
+  closeModal();
   loading(true,'Menyimpan...');
   try{
-    await fetch(`${SB_URL}/rest/v1/liturgis_jemaat_baru?sesi_id=eq.${CURR.id}`,{method:'DELETE',headers:H()});
-    const rows=valid.map(j=>({sesi_id:CURR.id,prefix:j.prefix,nama:j.nama.trim(),diajak_oleh:j.diajak_oleh.trim(),added_by:USER.nama,added_at:new Date().toISOString()}));
-    await fetch(`${SB_URL}/rest/v1/liturgis_jemaat_baru`,{method:'POST',headers:{...H(),'Prefer':'return=minimal'},body:JSON.stringify(rows)});
+    await fetch(`${SB}/rest/v1/liturgis_rundown?id=eq.${id}`,{method:'PATCH',headers:{...H(),'Prefer':'return=minimal'},body:JSON.stringify({judul,petugas,updated_by:USER.nama,updated_at:new Date().toISOString()})});
+    await loadCurrData();toast('Judul diperbarui ✓','ok');await renderTab();
+  }catch(e){toast('Gagal: '+e.message,'err');}finally{loading(false);}
+}
+
+async function hapusItem(id){
+  if(!confirm('Hapus item rundown ini?')){closeModal();return;}
+  closeModal();
+  loading(true,'Menghapus...');
+  try{
+    await fetch(`${SB}/rest/v1/liturgis_rundown?id=eq.${id}`,{method:'DELETE',headers:H()});
+    await loadCurrData();toast('Item dihapus','ok');await renderTab();
+  }catch(e){toast('Gagal: '+e.message,'err');}finally{loading(false);}
+}
+
+// ── TAMBAH ITEM RUNDOWN ──
+function showTambahItem(){
+  const tipeOpts=[
+    {v:'',l:'— Tidak ada (info saja)'},
+    {v:'lagu',l:'Lagu'},
+    {v:'bacaan',l:'Bacaan / Ayat'},
+    {v:'khotbah',l:'Khotbah'},
+    {v:'petugas',l:'Petugas'},
+    {v:'warta',l:'Warta Jemaat'},
+    {v:'jemaat',l:'Jemaat Baru'},
+  ].map(o=>`<option value="${o.v}">${o.l}</option>`).join('');
+  showModal('Tambah Item Rundown',`
+    <div class="e-group"><label class="e-lbl">Judul Item</label>
+      <input class="e-inp" id="mNewJudul" placeholder="mis. Perjamuan Kudus"/></div>
+    <div class="e-group"><label class="e-lbl">Petugas / Keterangan</label>
+      <input class="e-inp" id="mNewPetugas" placeholder="mis. Semua jemaat"/></div>
+    <div class="e-group"><label class="e-lbl">Tipe Data</label>
+      <select class="e-sel" id="mNewTipe">${tipeOpts}</select></div>
+    <button class="btn-save" onclick="saveTambahItem()">+ Tambah Item</button>`);
+}
+
+async function saveTambahItem(){
+  const judul=document.getElementById('mNewJudul')?.value.trim();
+  const petugas=document.getElementById('mNewPetugas')?.value.trim();
+  const tipe_data=document.getElementById('mNewTipe')?.value;
+  if(!judul){toast('Judul harus diisi','err');return;}
+  closeModal();
+  loading(true,'Menambahkan...');
+  try{
+    const nextUrutan=(CURR_RD.length?Math.max(...CURR_RD.map(r=>r.urutan))+1:1);
+    await fetch(`${SB}/rest/v1/liturgis_rundown`,{method:'POST',headers:{...H(),'Prefer':'return=minimal'},
+      body:JSON.stringify({sesi_id:CURR.id,urutan:nextUrutan,judul,petugas:petugas||'',tipe_data,nilai:'',updated_by:USER.nama,updated_at:new Date().toISOString()})});
+    await loadCurrData();toast('Item ditambahkan ✓','ok');await renderTab();
+  }catch(e){toast('Gagal: '+e.message,'err');}finally{loading(false);}
+}
+
+// ── INISIALISASI RUNDOWN DARI TEMPLATE ──
+function showInitRundown(){
+  const tipeLabel={minggu1:'Minggu kb-1',minggu2:'Minggu kb-2',rabu:'Rabu Malam'};
+  showModal('Inisialisasi Rundown',`
+    <div style="font-size:13px;color:var(--ink3);margin-bottom:16px;line-height:1.5">
+      Pilih template untuk mengisi rundown ibadah <strong>${esc(CURR.label)}</strong>
+    </div>
+    <div class="e-group"><label class="e-lbl">Template</label>
+      <select class="e-sel" id="mInitTipe">
+        <option value="minggu1">Minggu kb-1 (Pagi)</option>
+        <option value="minggu2">Minggu kb-2 (Siang)</option>
+        <option value="rabu">Rabu Malam</option>
+      </select>
+    </div>
+    <button class="btn-save" onclick="initRundown()">📋 Inisialisasi dari Template</button>`);
+  // Pre-select based on current sesi tipe
+  setTimeout(()=>{const sel=document.getElementById('mInitTipe');if(sel&&CURR.tipe)sel.value=CURR.tipe;},50);
+}
+
+async function initRundown(){
+  const tipe=document.getElementById('mInitTipe')?.value;
+  if(!tipe)return;
+  if(!confirm('Inisialisasi rundown? Data yang sudah ada akan dihapus.'))return;
+  closeModal();
+  loading(true,'Membuat rundown...');
+  try{
+    // Load template items
+    const tmpl=await api(`/rest/v1/liturgis_template?tipe=eq.${tipe}&select=id,nama`);
+    if(!tmpl.length)throw new Error('Template tidak ditemukan');
+    const tmplId=tmpl[0].id;
+    const items=await api(`/rest/v1/liturgis_template_item?template_id=eq.${tmplId}&order=urutan.asc`);
+    // Delete existing rundown
+    await fetch(`${SB}/rest/v1/liturgis_rundown?sesi_id=eq.${CURR.id}`,{method:'DELETE',headers:H()});
+    // Insert new rundown items
+    const rows=items.map(item=>({
+      sesi_id:CURR.id,
+      urutan:item.urutan,
+      judul:item.judul,
+      petugas:item.petugas||'',
+      tipe_data:item.tipe_data||'',
+      nilai:'',
+      updated_by:USER.nama,
+      updated_at:new Date().toISOString(),
+    }));
+    await fetch(`${SB}/rest/v1/liturgis_rundown`,{method:'POST',headers:{...H(),'Prefer':'return=minimal'},body:JSON.stringify(rows)});
+    await loadCurrData();toast('Rundown berhasil diinisialisasi ✓','ok');
+    TAB='edit';buildNav();await renderTab();
+  }catch(e){toast('Gagal: '+e.message,'err');}finally{loading(false);}
+}
+
+// ── BUAT SESI ──
+function showBuatSesi(){
+  const today=new Date().toISOString().slice(0,10);
+  showModal('Buat Sesi Ibadah Baru',`
+    <div class="e-group"><label class="e-lbl">Tanggal</label>
+      <input class="e-inp" type="date" id="mDate" value="${today}"/></div>
+    <div class="e-group"><label class="e-lbl">Format Ibadah</label>
+      <select class="e-sel" id="mTipe">
+        <option value="minggu1">Minggu kb-1 (10:40)</option>
+        <option value="minggu2">Minggu kb-2 (14:00)</option>
+        <option value="rabu">Rabu Malam (19:30)</option>
+      </select>
+    </div>
+    <button class="btn-save" onclick="createSesi()">+ Buat Sesi</button>`);
+}
+
+async function createSesi(){
+  const date=document.getElementById('mDate')?.value;
+  const tipe=document.getElementById('mTipe')?.value;
+  if(!date){toast('Pilih tanggal','err');return;}
+  const dt=new Date(date+'T00:00:00');
+  const d=dt.getDate(),m=dt.toLocaleString('id-ID',{month:'short'});
+  const labels={minggu1:`Minggu kb-1 · ${d} ${m}`,minggu2:`Minggu kb-2 · ${d} ${m}`,rabu:`Rabu · ${d} ${m}`};
+  closeModal();
+  loading(true,'Membuat sesi...');
+  try{
+    await fetch(`${SB}/rest/v1/liturgis_sesi`,{method:'POST',headers:{...H(),'Prefer':'return=minimal'},
+      body:JSON.stringify({label:labels[tipe],tipe,tanggal:date,created_by:USER.nama,created_at:new Date().toISOString()})});
+    toast('Sesi baru dibuat ✓','ok');
+    await loadSesi();
+    // Auto select new sesi
+    CURR=SESI.find(s=>s.tanggal===date&&s.tipe===tipe)||SESI[SESI.length-1];
+    buildSessBar();
     await loadCurrData();
-    toast('Jemaat baru tersimpan ✓','ok');
-    TAB='rundown';buildNav();await renderTab();
+    TAB='edit';buildNav();await renderTab();
   }catch(e){toast('Gagal: '+e.message,'err');}finally{loading(false);}
 }
 
 // ── ADMIN ──
 async function buildAdmin(){
   let users=[];
-  try{users=await fetch(`${SB_URL}/rest/v1/liturgis_users?select=*&order=nama.asc`,{headers:H()}).then(r=>r.json());}catch{}
+  try{users=await api('/rest/v1/liturgis_users?select=*&order=role.asc,nama.asc');}catch{}
   const rmap={admin:'ur-admin',ibadah:'ur-ibadah',pujian:'ur-pujian',koor:'ur-koor',usher:'ur-usher',user:'ur-user'};
   const userHTML=users.map(u=>`<div class="user-item" onclick="event.stopPropagation()">
     <div class="u-av">${initials(u.nama)}</div>
@@ -943,171 +1059,61 @@ async function buildAdmin(){
 
   return`
   <div class="card" style="margin-bottom:8px">
-    <div class="card-ttl">📅 Buat Sesi Baru</div>
-    <div class="e-group"><label class="e-lbl">Tanggal</label><input class="e-inp" type="date" id="aDate" value="${new Date().toISOString().slice(0,10)}"/></div>
-    <div class="e-group"><label class="e-lbl">Format</label>
-      <select class="e-sel" id="aTipe">
-        <option value="minggu1">Minggu kb-1 (10:40)</option>
-        <option value="minggu2">Minggu kb-2 (14:00)</option>
-        <option value="rabu">Rabu Malam (19:30)</option>
-      </select>
-    </div>
-    <button class="btn-save" onclick="createSesiFromModal()">+ Buat Sesi</button>
-  </div>
-  <div class="card" style="margin-bottom:8px">
     <div class="card-ttl">👥 Pengguna (${users.length})</div>
     ${userHTML||'<div style="color:var(--ink4);font-size:13px;padding:12px 0;text-align:center">Belum ada pengguna</div>'}
-    <div style="margin-top:10px;padding:10px;background:var(--cream);border-radius:8px;font-size:12px;color:var(--ink3);line-height:1.5">Tambah pengguna: Supabase Dashboard → Authentication → Users → Add user, lalu insert ke tabel liturgis_users dengan role yang sesuai.</div>
+    <div style="margin-top:10px;padding:10px;background:var(--cream);border-radius:8px;font-size:12px;color:var(--ink3);line-height:1.5">
+      Tambah pengguna: Supabase → Authentication → Users → Add user, lalu insert ke tabel <code>liturgis_users</code> dengan role yang sesuai.
+    </div>
   </div>
   <div class="card" style="margin-bottom:8px">
     <div class="card-ttl">🎤 Pengkhotbah</div>
     ${pdtList}
-    <div class="e-group" style="margin-top:12px"><label class="e-lbl">Tambah Pengkhotbah Baru</label><input class="e-inp" id="eNewPdt" placeholder="Nama pengkhotbah"/></div>
+    <div class="e-group" style="margin-top:12px"><label class="e-lbl">Tambah Pengkhotbah</label>
+      <input class="e-inp" id="eNewPdt" placeholder="Nama pengkhotbah"/></div>
     <button class="btn-save" onclick="addPengkhotbah()">+ Tambah</button>
   </div>
   <div class="card">
     <div class="card-ttl">🙏 Pelayan Liturgis</div>
     ${lavList}
-    <div class="e-group" style="margin-top:12px"><label class="e-lbl">Tambah Pelayan Baru</label>
+    <div class="e-group" style="margin-top:12px"><label class="e-lbl">Tambah Pelayan</label>
       <div class="e-row">
-        <select class="e-sel" id="eNewLavJab" style="max-width:100px"><option>Pnt.</option><option>Dk.</option><option>Pntw.</option></select>
-        <input class="e-inp" id="eNewLavNama" placeholder="Nama pelayan"/>
+        <select class="e-sel" id="eNewJab" style="max-width:100px"><option>Pnt.</option><option>Dk.</option><option>Pntw.</option></select>
+        <input class="e-inp" id="eNewLav" placeholder="Nama pelayan"/>
       </div>
     </div>
     <button class="btn-save" onclick="addPelayan()">+ Tambah</button>
   </div>`;
 }
 
-function showBuatSesi(){
-  // Remove existing modal if any
-  const existing = document.getElementById('modalBuatSesi');
-  if(existing) existing.remove();
-
-  const today = new Date().toISOString().slice(0,10);
-  const modal = document.createElement('div');
-  modal.id = 'modalBuatSesi';
-  modal.style.cssText = 'position:fixed;inset:0;background:rgba(13,27,62,.9);z-index:600;display:flex;align-items:flex-end;justify-content:center;backdrop-filter:blur(3px)';
-  modal.innerHTML = `
-    <div style="background:#fff;border-radius:16px 16px 0 0;padding:20px;width:100%;max-width:480px;max-height:80vh;overflow-y:auto">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
-        <div style="font-size:15px;font-weight:700;color:#1B2B5E">Buat Sesi Ibadah Baru</div>
-        <button onclick="document.getElementById('modalBuatSesi').remove()" style="background:none;border:none;font-size:22px;cursor:pointer;color:#6B7280;padding:4px">×</button>
-      </div>
-      <div class="e-group"><label class="e-lbl">Tanggal</label>
-        <input class="e-inp" type="date" id="mDate" value="${today}"/></div>
-      <div class="e-group"><label class="e-lbl">Format Ibadah</label>
-        <select class="e-sel" id="mTipe">
-          <option value="minggu1">Minggu kb-1 (10:40)</option>
-          <option value="minggu2">Minggu kb-2 (14:00)</option>
-          <option value="rabu">Rabu Malam (19:30)</option>
-        </select>
-      </div>
-      <button class="btn-save" onclick="createSesiFromModal()" style="margin-top:8px">+ Buat Sesi</button>
-      <div style="height:20px"></div>
-    </div>`;
-  modal.addEventListener('click', e=>{if(e.target===modal)modal.remove();});
-  document.body.appendChild(modal);
-}
-
-async function createSesiFromModal(){
-  const date = document.getElementById('mDate').value;
-  const tipe = document.getElementById('mTipe').value;
-  if(!date){toast('Pilih tanggal','err');return;}
-  const dt = new Date(date+'T00:00:00');
-  const d = dt.getDate(), m = dt.toLocaleString('id-ID',{month:'short'});
-  const labels = {
-    minggu1:`Minggu kb-1 · ${d} ${m}`,
-    minggu2:`Minggu kb-2 · ${d} ${m}`,
-    rabu:`Rabu · ${d} ${m}`
-  };
-  document.getElementById('modalBuatSesi').remove();
-  loading(true,'Membuat sesi...');
-  try{
-    await fetch(`${SB_URL}/rest/v1/liturgis_sesi`,{
-      method:'POST',
-      headers:{...H(),'Prefer':'return=minimal'},
-      body:JSON.stringify({label:labels[tipe],tipe,tanggal:date,created_by:USER.nama,created_at:new Date().toISOString()})
-    });
-    toast('Sesi baru dibuat ✓','ok');
-    await loadSesi();await loadCurrData();
-    TAB='rundown';buildNav();buildSessBar();await renderTab();
-  }catch(e){toast('Gagal: '+e.message,'err');}
-  finally{loading(false);}
-}
-
-function goAdmin(){
-  TAB='admin';
-  document.querySelectorAll('.bnav-btn').forEach(b=>b.classList.remove('on'));
-  document.querySelectorAll('.bnav-btn').forEach(b=>{
-    if(b.textContent.trim().includes('Admin'))b.classList.add('on');
-  });
-  renderTab();
-}
-
-async function createSesi(){
-  // Read from admin form fields
-  const dateEl=document.getElementById('aDate');
-  const tipeEl=document.getElementById('aTipe');
-  if(!dateEl||!tipeEl){showBuatSesi();return;}
-  const date=dateEl.value, tipe=tipeEl.value;
-  if(!date){toast('Pilih tanggal','err');return;}
-  const dt=new Date(date+'T00:00:00');
-  const d=dt.getDate(),m=dt.toLocaleString('id-ID',{month:'short'});
-  const labels={minggu1:`Minggu kb-1 · ${d} ${m}`,minggu2:`Minggu kb-2 · ${d} ${m}`,rabu:`Rabu · ${d} ${m}`};
-  loading(true,'Membuat sesi...');
-  try{
-    await fetch(`${SB_URL}/rest/v1/liturgis_sesi`,{method:'POST',headers:{...H(),'Prefer':'return=minimal'},body:JSON.stringify({label:labels[tipe],tipe,tanggal:date,created_by:USER.nama,created_at:new Date().toISOString()})});
-    toast('Sesi baru dibuat ✓','ok');
-    await loadSesi();await loadCurrData();TAB='rundown';buildNav();buildSessBar();await renderTab();
-  }catch(e){toast('Gagal: '+e.message,'err');}finally{loading(false);}
-}
-
 async function addPengkhotbah(){
-  const nama=document.getElementById('eNewPdt').value.trim();
+  const nama=document.getElementById('eNewPdt')?.value.trim();
   if(!nama){toast('Isi nama dulu','err');return;}
   try{
-    await fetch(`${SB_URL}/rest/v1/liturgis_pengkhotbah`,{method:'POST',headers:{...H(),'Prefer':'return=minimal'},body:JSON.stringify({nama,aktif:true,urutan:99})});
-    await loadPengkhotbah();toast('Pengkhotbah ditambahkan ✓','ok');refreshDropdowns();await renderTab();
+    await fetch(`${SB}/rest/v1/liturgis_pengkhotbah`,{method:'POST',headers:{...H(),'Prefer':'return=minimal'},body:JSON.stringify({nama,aktif:true,urutan:99})});
+    await loadMaster();refreshDropdowns();document.getElementById('eNewPdt').value='';
+    toast('Pengkhotbah ditambahkan ✓','ok');await renderTab();
   }catch(e){toast('Gagal: '+e.message,'err');}
 }
 
 async function addPelayan(){
-  const jab=document.getElementById('eNewLavJab').value;
-  const nama=document.getElementById('eNewLavNama').value.trim();
+  const jab=document.getElementById('eNewJab')?.value;
+  const nama=document.getElementById('eNewLav')?.value.trim();
   if(!nama){toast('Isi nama dulu','err');return;}
   try{
-    await fetch(`${SB_URL}/rest/v1/liturgis_pelayan`,{method:'POST',headers:{...H(),'Prefer':'return=minimal'},body:JSON.stringify({nama,jabatan:jab,aktif:true,urutan:99})});
-    await loadPelayan();toast('Pelayan ditambahkan ✓','ok');refreshDropdowns();await renderTab();
+    await fetch(`${SB}/rest/v1/liturgis_pelayan`,{method:'POST',headers:{...H(),'Prefer':'return=minimal'},body:JSON.stringify({nama,jabatan:jab,aktif:true,urutan:99})});
+    await loadMaster();refreshDropdowns();document.getElementById('eNewLav').value='';
+    toast('Pelayan ditambahkan ✓','ok');await renderTab();
   }catch(e){toast('Gagal: '+e.message,'err');}
 }
 
-// ── REFRESH DROPDOWNS IN PLACE ──
 function refreshDropdowns(){
-  // Refresh pengkhotbah dropdown
-  const pSel = document.getElementById('ePembicara');
-  if(pSel){
-    const cur = pSel.value;
-    pSel.innerHTML = '<option value="">— Pilih —</option>' + 
-      PENGKHOTBAH.map(p=>`<option value="${p.nama}" ${cur===p.nama?'selected':''}>${p.nama}</option>`).join('');
-  }
-  // Refresh liturgis dropdown
-  const lSel = document.getElementById('eLiturgis');
-  if(lSel){
-    const cur = lSel.value;
-    lSel.innerHTML = '<option value="">— Pilih —</option>' + 
-      PELAYAN.map(p=>{const v=p.jabatan+' '+p.nama;return`<option value="${v}" ${cur===v?'selected':''}>${v}</option>`;}).join('');
-  }
+  const pdtOpts='<option value="">— Pilih —</option>'+PENGKHOTBAH.map(p=>`<option value="${esc(p.nama)}">${esc(p.nama)}</option>`).join('');
+  const litOpts='<option value="">— Pilih —</option>'+PELAYAN.map(p=>{const v=p.jabatan+' '+p.nama;return`<option value="${esc(v)}">${esc(v)}</option>`;}).join('');
+  document.querySelectorAll('select[id^="rd_pem_"]').forEach(s=>{const cur=s.value;s.innerHTML=pdtOpts;s.value=cur;});
+  document.querySelectorAll('select[id^="rd_val_"]').forEach(s=>{const cur=s.value;s.innerHTML=litOpts;s.value=cur;});
 }
 
-// ── INIT ──
-(async function(){
-  if(await restoreSession()){
-    await startApp();
-  } else {
-    // No login needed to view — start as guest
-    await startGuest();
-  }
-})();
+init();
 </script>
 </body>
 </html>
