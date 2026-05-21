@@ -376,7 +376,7 @@ function buildSessBar(){
   const bar=document.getElementById('sessBar');
   if(!SESI.length){bar.innerHTML='';return;}
   bar.innerHTML=SESI.map((s,i)=>`<button class="sess-btn ${i===0?'on':''}" onclick="selSess(${s.id},this)">${esc(s.label)}</button>`).join('');
-  if(USER.role==='admin')bar.innerHTML+=`<button class="sess-btn" onclick="goAdmin()" style="border-style:dashed;color:var(--gold2)">+ Sesi</button>`;
+  if(USER.role==='admin'||USER.role==='ibadah')bar.innerHTML+=`<button class="sess-btn" onclick="showBuatSesi()" style="border-style:dashed;color:var(--gold2)">+ Sesi</button>`;
 }
 
 async function selSess(id,el){
@@ -932,7 +932,7 @@ async function buildAdmin(){
   let users=[];
   try{users=await fetch(`${SB_URL}/rest/v1/liturgis_users?select=*&order=nama.asc`,{headers:H()}).then(r=>r.json());}catch{}
   const rmap={admin:'ur-admin',ibadah:'ur-ibadah',pujian:'ur-pujian',koor:'ur-koor',usher:'ur-usher',user:'ur-user'};
-  const userHTML=users.map(u=>`<div class="user-item">
+  const userHTML=users.map(u=>`<div class="user-item" onclick="event.stopPropagation()">
     <div class="u-av">${initials(u.nama)}</div>
     <div style="flex:1"><div class="u-name">${esc(u.nama)}</div><div class="u-email">${esc(u.email)}</div></div>
     <span class="u-role ${rmap[u.role]||'ur-user'}">${esc(u.role)}</span>
@@ -952,7 +952,7 @@ async function buildAdmin(){
         <option value="rabu">Rabu Malam (19:30)</option>
       </select>
     </div>
-    <button class="btn-save" onclick="createSesi()">+ Buat Sesi</button>
+    <button class="btn-save" onclick="createSesiFromModal()">+ Buat Sesi</button>
   </div>
   <div class="card" style="margin-bottom:8px">
     <div class="card-ttl">👥 Pengguna (${users.length})</div>
@@ -978,11 +978,78 @@ async function buildAdmin(){
   </div>`;
 }
 
-function goAdmin(){TAB='admin';document.querySelectorAll('.bnav-btn').forEach(b=>{b.classList.toggle('on',b.textContent.includes('Admin'));});renderTab();}
+function showBuatSesi(){
+  // Remove existing modal if any
+  const existing = document.getElementById('modalBuatSesi');
+  if(existing) existing.remove();
+
+  const today = new Date().toISOString().slice(0,10);
+  const modal = document.createElement('div');
+  modal.id = 'modalBuatSesi';
+  modal.style.cssText = 'position:fixed;inset:0;background:rgba(13,27,62,.9);z-index:600;display:flex;align-items:flex-end;justify-content:center;backdrop-filter:blur(3px)';
+  modal.innerHTML = `
+    <div style="background:#fff;border-radius:16px 16px 0 0;padding:20px;width:100%;max-width:480px;max-height:80vh;overflow-y:auto">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+        <div style="font-size:15px;font-weight:700;color:#1B2B5E">Buat Sesi Ibadah Baru</div>
+        <button onclick="document.getElementById('modalBuatSesi').remove()" style="background:none;border:none;font-size:22px;cursor:pointer;color:#6B7280;padding:4px">×</button>
+      </div>
+      <div class="e-group"><label class="e-lbl">Tanggal</label>
+        <input class="e-inp" type="date" id="mDate" value="${today}"/></div>
+      <div class="e-group"><label class="e-lbl">Format Ibadah</label>
+        <select class="e-sel" id="mTipe">
+          <option value="minggu1">Minggu kb-1 (10:40)</option>
+          <option value="minggu2">Minggu kb-2 (14:00)</option>
+          <option value="rabu">Rabu Malam (19:30)</option>
+        </select>
+      </div>
+      <button class="btn-save" onclick="createSesiFromModal()" style="margin-top:8px">+ Buat Sesi</button>
+      <div style="height:20px"></div>
+    </div>`;
+  modal.addEventListener('click', e=>{if(e.target===modal)modal.remove();});
+  document.body.appendChild(modal);
+}
+
+async function createSesiFromModal(){
+  const date = document.getElementById('mDate').value;
+  const tipe = document.getElementById('mTipe').value;
+  if(!date){toast('Pilih tanggal','err');return;}
+  const dt = new Date(date+'T00:00:00');
+  const d = dt.getDate(), m = dt.toLocaleString('id-ID',{month:'short'});
+  const labels = {
+    minggu1:`Minggu kb-1 · ${d} ${m}`,
+    minggu2:`Minggu kb-2 · ${d} ${m}`,
+    rabu:`Rabu · ${d} ${m}`
+  };
+  document.getElementById('modalBuatSesi').remove();
+  loading(true,'Membuat sesi...');
+  try{
+    await fetch(`${SB_URL}/rest/v1/liturgis_sesi`,{
+      method:'POST',
+      headers:{...H(),'Prefer':'return=minimal'},
+      body:JSON.stringify({label:labels[tipe],tipe,tanggal:date,created_by:USER.nama,created_at:new Date().toISOString()})
+    });
+    toast('Sesi baru dibuat ✓','ok');
+    await loadSesi();await loadCurrData();
+    TAB='rundown';buildNav();buildSessBar();await renderTab();
+  }catch(e){toast('Gagal: '+e.message,'err');}
+  finally{loading(false);}
+}
+
+function goAdmin(){
+  TAB='admin';
+  document.querySelectorAll('.bnav-btn').forEach(b=>b.classList.remove('on'));
+  document.querySelectorAll('.bnav-btn').forEach(b=>{
+    if(b.textContent.trim().includes('Admin'))b.classList.add('on');
+  });
+  renderTab();
+}
 
 async function createSesi(){
-  const date=document.getElementById('aDate').value;
-  const tipe=document.getElementById('aTipe').value;
+  // Read from admin form fields
+  const dateEl=document.getElementById('aDate');
+  const tipeEl=document.getElementById('aTipe');
+  if(!dateEl||!tipeEl){showBuatSesi();return;}
+  const date=dateEl.value, tipe=tipeEl.value;
   if(!date){toast('Pilih tanggal','err');return;}
   const dt=new Date(date+'T00:00:00');
   const d=dt.getDate(),m=dt.toLocaleString('id-ID',{month:'short'});
