@@ -302,6 +302,7 @@ function doLogout(){
   document.getElementById('tbSub').textContent='Mode Lihat';
   document.getElementById('tbLoginBtn').style.display='flex';
   document.getElementById('tbLogoutBtn').style.display='none';
+  buildSessBar(); // remove + Sesi button
   buildNav();renderTab();
 }
 
@@ -313,6 +314,8 @@ function applyUserUI(){
   document.getElementById('tbSub').textContent=USER.nama;
   document.getElementById('tbLoginBtn').style.display='none';
   document.getElementById('tbLogoutBtn').style.display='flex';
+  TAB='rundown';
+  buildSessBar();
 }
 
 // ── INIT ──
@@ -418,17 +421,25 @@ const isIbadah=()=>USER&&['admin','ibadah'].includes(USER.role);
 const isPujian=()=>USER&&['admin','pujian'].includes(USER.role);
 const isKoor=()=>USER&&['admin','koor'].includes(USER.role);
 const isUsher=()=>USER&&['admin','usher'].includes(USER.role);
+const canEditLagu=()=>USER&&['admin','ibadah','pujian'].includes(USER.role);
+function canEditItemRole(tipe_data){
+  if(!USER)return false;
+  if(USER.role==='admin')return true;
+  if(tipe_data==='lagu')return canEditLagu();
+  if(tipe_data==='warta'||tipe_data==='bacaan'||tipe_data==='khotbah'||tipe_data==='petugas')return isIbadah();
+  if(tipe_data==='jemaat')return isUsher();
+  if(tipe_data==='')return false;
+  return false;
+}
 
 function buildNav(){
   const tabs=['rundown'];
-  if(canEdit())tabs.push('edit');
   if(isAdmin())tabs.push('admin');
   const icons={
     rundown:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><polyline points="3 6 4 7 6 5"/><polyline points="3 12 4 13 6 11"/><polyline points="3 18 4 19 6 17"/></svg>`,
-    edit:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>`,
     admin:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/></svg>`,
   };
-  const labels={rundown:'Rundown',edit:'Edit',admin:'Admin'};
+  const labels={rundown:'Ibadah',admin:'Admin'};
   document.getElementById('bnav').innerHTML=tabs.map(t=>`<button class="bnav-btn ${t===TAB?'on':''}" onclick="switchTab('${t}',this)">${icons[t]}${labels[t]}</button>`).join('');
 }
 
@@ -445,7 +456,6 @@ async function renderTab(){
   try{
     const c=document.getElementById('mainContent');
     if(TAB==='rundown')c.innerHTML=buildRundown();
-    else if(TAB==='edit')c.innerHTML=buildEdit();
     else if(TAB==='admin')c.innerHTML=await buildAdmin();
   }catch(e){toast('Gagal: '+e.message,'err');}
   finally{loading(false);}
@@ -462,7 +472,8 @@ function buildRundown(){
   if(!CURR_RD.length){
     return`<div class="card"><div class="empty-state" style="padding:24px"><div class="es-icon">📋</div>
     <div class="es-title">Rundown belum diisi</div>
-    <div class="es-desc">${isIbadah()?'Buka tab Edit untuk mengisi rundown ibadah ini':'Bagian Ibadah belum mengisi rundown'}</div>
+    <div class="es-desc">Bagian Ibadah belum mengisi rundown untuk sesi ini</div>
+    ${isIbadah()?`<button class="btn-save" style="margin-top:16px;max-width:260px;margin-inline:auto" onclick="showInitRundown()">📋 Inisialisasi Rundown</button>`:''}
     </div></div>`;
   }
   const req=CURR_RD.filter(r=>r.tipe_data&&r.tipe_data!=='');
@@ -489,6 +500,9 @@ function buildRundown(){
       `<div class="rd-sub muted">${esc(r.petugas||'')}</div>`;
     const recentBadge=r.updated_at&&(Date.now()-new Date(r.updated_at).getTime())<3600000?
       `<div class="rd-upd-badge">Diubah ${fmtTime(r.updated_at)} · ${esc(r.updated_by||'')}</div>`:'';
+    // Edit button - shown inline for authorized roles
+    const canEditItem=canEditItemRole(r.tipe_data);
+    const editBtn=canEditItem?`<button onclick="event.stopPropagation();toggleExpand(${i},event)" style="background:none;border:none;cursor:pointer;padding:6px;color:var(--gold);font-size:16px;flex-shrink:0" title="Edit">✏</button>`:'';
     return`<div class="rd-item ${isExp?'expanded':''}" onclick="toggleExpand(${i},event)" style="${isEmpty?'border-left:3px solid var(--red)':''}">
       <div class="rd-n">${i+1}</div>
       <div class="rd-body">
@@ -498,12 +512,14 @@ function buildRundown(){
       ${dot}${chipNew}
     </div>
     <div class="rd-detail ${isExp?'show':''}">
-      <div class="rd-detail-hdr">Detail</div>
+      <div class="rd-detail-hdr">Detail ${canEditItem?'<span style="float:right;font-size:10px;color:var(--amber);font-weight:600">✏ Bisa diedit</span>':''}</div>
       ${buildItemDetail(r)}
+      ${isExp&&canEditItem?buildInlineEdit(r):''}
     </div>`;
   }).join('');
 
-  return progress+`<div class="rd-wrap">${items}</div>`;
+  const addItemBtn=isIbadah()?`<button class="btn-add-sm" onclick="showTambahItem()" style="margin-top:4px">+ Tambah Item Rundown</button>`:'';
+  return progress+`<div class="rd-wrap">${items}</div>`+addItemBtn;
 }
 
 function getItemFilled(r){
@@ -533,6 +549,88 @@ function getItemSummary(r){
   return r.petugas||'';
 }
 
+function buildInlineEdit(r){
+  const td=r.tipe_data;
+  const pdtOpts=PENGKHOTBAH.map(p=>`<option value="${esc(p.nama)}" ${(r.nilai||'').split('||')[1]===p.nama?'selected':''}>${esc(p.nama)}</option>`).join('');
+  const litOpts=PELAYAN.map(p=>{const v=p.jabatan+' '+p.nama;return`<option value="${esc(v)}" ${r.nilai===v?'selected':''}>${esc(v)}</option>`;}).join('');
+
+  if(td==='lagu'){
+    const rdId=r.id;
+    const lagu=CURR_LAGU.filter(l=>l.rundown_id===rdId);
+    const laguHTML=lagu.map(l=>`<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--cream2)">
+      <div style="flex:1;font-size:13px"><strong>${esc(l.nama)}</strong>${l.kode?` <span style="color:var(--ink3)">(${esc(l.kode)})</span>`:''}</div>
+      <button onclick="hapusLagu(${l.id})" style="background:none;border:none;color:var(--red);font-size:18px;cursor:pointer;padding:4px;min-width:32px">×</button>
+    </div>`).join('');
+    // For non-linked lagu (nilai based)
+    if(!lagu.length&&td==='lagu'&&!r.judul.toLowerCase().includes('pembuka')){
+      return`<div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--cream2)">
+        <div class="e-group"><label class="e-lbl">Nomor / Nama Lagu</label>
+          <input class="e-inp" id="ie_val_${r.id}" value="${esc(r.nilai||'')}" placeholder="mis. 56 - S'lama Seminggu Lalu"/></div>
+        <button onclick="saveInlineVal(${r.id},'ie_val_${r.id}')" class="btn-save" style="padding:11px">💾 Simpan</button>
+      </div>`;
+    }
+    return`<div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--cream2)">
+      ${laguHTML}
+      <button class="btn-add-sm" style="margin-top:8px" onclick="showTambahLagu(${rdId})">+ Tambah Lagu</button>
+    </div>`;
+  }
+  if(td==='khotbah'){
+    const parts=(r.nilai||'').split('||');
+    return`<div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--cream2)">
+      <div class="e-group"><label class="e-lbl">Judul Khotbah</label>
+        <input class="e-inp" id="ie_judul_${r.id}" value="${esc(parts[0]||'')}" placeholder="Judul khotbah..."/></div>
+      <div class="e-group"><label class="e-lbl">Pembicara</label>
+        <select class="e-sel" id="ie_pem_${r.id}"><option value="">— Pilih —</option>${pdtOpts}</select></div>
+      <button onclick="saveInlineKhotbah(${r.id})" class="btn-save" style="padding:11px">💾 Simpan</button>
+    </div>`;
+  }
+  if(td==='bacaan'){
+    return`<div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--cream2)">
+      <div class="e-group"><label class="e-lbl">Ayat / Bacaan</label>
+        <input class="e-inp" id="ie_val_${r.id}" value="${esc(r.nilai||'')}" placeholder="mis. Kej 45:1-4"/></div>
+      <button onclick="saveInlineVal(${r.id},'ie_val_${r.id}')" class="btn-save" style="padding:11px">💾 Simpan</button>
+    </div>`;
+  }
+  if(td==='petugas'){
+    const isLiturgis=r.judul.toLowerCase().includes('berdoa')||r.judul.toLowerCase().includes('doa pembuka')||r.judul.toLowerCase().includes('doa persembahan');
+    const isPemberkatan=r.judul.toLowerCase().includes('pemberkatan');
+    const isPersembahan=r.judul.toLowerCase().includes('persembahan')&&!r.judul.toLowerCase().includes('doa');
+    let inp='';
+    if(isLiturgis){
+      inp=`<select class="e-sel" id="ie_val_${r.id}"><option value="">— Pilih —</option>${litOpts}</select>`;
+    }else if(isPemberkatan){
+      inp=`<select class="e-sel" id="ie_val_${r.id}"><option value="">— Pilih —</option>${pdtOpts}</select>`;
+    }else{
+      inp=`<input class="e-inp" id="ie_val_${r.id}" value="${esc(r.nilai||'')}" placeholder="Nama petugas..."/>`;
+    }
+    return`<div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--cream2)">
+      <div class="e-group"><label class="e-lbl">Petugas</label>${inp}</div>
+      <button onclick="saveInlineVal(${r.id},'ie_val_${r.id}')" class="btn-save" style="padding:11px">💾 Simpan</button>
+    </div>`;
+  }
+  if(td==='warta'){
+    const wartaHTML=CURR_WARTA.map((w,i)=>`<div style="display:flex;align-items:flex-start;gap:8px;padding:6px 0;border-bottom:1px solid var(--cream2)">
+      <div style="flex:1;font-size:13px;line-height:1.4">${i+1}. ${esc(w.isi)}<div style="font-size:10px;color:var(--ink4)">${esc(w.added_by||'')} · ${fmtTime(w.added_at)}</div></div>
+      <button onclick="hapusWarta(${w.id})" style="background:none;border:none;color:var(--red);font-size:18px;cursor:pointer;padding:4px;min-width:32px;flex-shrink:0">×</button>
+    </div>`).join('');
+    return`<div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--cream2)">
+      ${wartaHTML}
+      <button class="btn-add-sm" style="margin-top:8px" onclick="showTambahWarta()">+ Tambah Warta</button>
+    </div>`;
+  }
+  if(td==='jemaat'){
+    const jbHTML=CURR_JB.map(j=>`<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--cream2)">
+      <div style="flex:1;font-size:13px"><strong>${esc(j.prefix)} ${esc(j.nama)}</strong> — ${esc(j.diajak_oleh||'—')}<div style="font-size:10px;color:var(--ink4)">${esc(j.added_by||'')} · ${fmtTime(j.added_at)}</div></div>
+      <button onclick="hapusJemaat(${j.id})" style="background:none;border:none;color:var(--red);font-size:18px;cursor:pointer;padding:4px;min-width:32px">×</button>
+    </div>`).join('');
+    return`<div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--cream2)">
+      ${jbHTML}
+      <button class="btn-add-sm" style="margin-top:8px" onclick="showTambahJemaat()">+ Tambah Jemaat Baru</button>
+    </div>`;
+  }
+  return'';
+}
+
 function buildItemDetail(r){
   const td=r.tipe_data;
   const drow=(l,v)=>`<div class="rd-drow"><span class="rd-dl">${l}</span><span class="rd-dv ${v?'':'empty'}">${v?esc(v):'Belum diisi'}</span></div>`;
@@ -540,11 +638,13 @@ function buildItemDetail(r){
   if(td==='lagu'){
     const lagu=CURR_LAGU.filter(l=>l.rundown_id===r.id);
     if(!lagu.length&&!r.nilai)return drow('Lagu','');
-    const rows=lagu.length?lagu.map(l=>`<div class="rd-drow"><span class="rd-dl">Lagu ${l.urutan}</span>
-      <div style="text-align:right"><div class="rd-dv">${esc(l.nama)}${l.kode?` <span style="color:var(--ink3);font-weight:400">(${esc(l.kode)})</span>`:''}</div>
-      ${l.added_by?`<div style="font-size:10px;color:var(--ink4);font-style:italic">${esc(l.added_by)} · ${fmtTime(l.added_at)}</div>`:''}
-      </div></div>`).join(''):[drow('Nomor',r.nilai)];
-    return rows.join('');
+    if(lagu.length){
+      return lagu.map(l=>`<div class="rd-drow"><span class="rd-dl">Lagu ${l.urutan}</span>
+        <div style="text-align:right"><div class="rd-dv">${esc(l.nama)}${l.kode?` <span style="color:var(--ink3);font-weight:400">(${esc(l.kode)})</span>`:''}</div>
+        ${l.added_by?`<div style="font-size:10px;color:var(--ink4);font-style:italic">${esc(l.added_by)} · ${fmtTime(l.added_at)}</div>`:''}
+        </div></div>`).join('');
+    }
+    return drow('Nomor',r.nilai);
   }
   if(td==='khotbah'){
     // nilai format: "judul||pembicara"
@@ -798,6 +898,30 @@ function toggleSection(hd){
 }
 
 // ── SAVE FUNCTIONS ──
+async function saveInlineVal(id, inputId){
+  const el=document.getElementById(inputId);
+  if(!el)return;
+  const nilai=el.value.trim();
+  loading(true,'Menyimpan...');
+  try{
+    await fetch(`${SB}/rest/v1/liturgis_rundown?id=eq.${id}`,{method:'PATCH',headers:{...H(),'Prefer':'return=minimal'},
+      body:JSON.stringify({nilai,updated_by:USER.nama,updated_at:new Date().toISOString()})});
+    await loadCurrData();toast('Tersimpan ✓','ok');await renderTab();
+  }catch(e){toast('Gagal: '+e.message,'err');}finally{loading(false);}
+}
+
+async function saveInlineKhotbah(id){
+  const judul=document.getElementById(`ie_judul_${id}`)?.value.trim()||'';
+  const pem=document.getElementById(`ie_pem_${id}`)?.value||'';
+  const nilai=judul+'||'+pem;
+  loading(true,'Menyimpan...');
+  try{
+    await fetch(`${SB}/rest/v1/liturgis_rundown?id=eq.${id}`,{method:'PATCH',headers:{...H(),'Prefer':'return=minimal'},
+      body:JSON.stringify({nilai,updated_by:USER.nama,updated_at:new Date().toISOString()})});
+    await loadCurrData();toast('Khotbah tersimpan ✓','ok');await renderTab();
+  }catch(e){toast('Gagal: '+e.message,'err');}finally{loading(false);}
+}
+
 async function saveSemuaRundown(){
   if(!confirm('Simpan semua data ibadah? Perubahan langsung terlihat semua pengguna.'))return;
   loading(true,'Menyimpan...');
